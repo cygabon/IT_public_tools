@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculs CIDR - CIDR_Normand</title>
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --muted: #9aa6b2;
+      --accent: #60a5fa;
+      --ok: #34d399;
+      --danger: #fb7185;
+    }
+    body {
+      font-family: Inter, Segoe UI, system-ui, Arial;
+      background: var(--bg);
+      color: #e6eef6;
+      margin: 0;
+      padding: 16px;
+    }
+    h1 {
+      margin: 0;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .app-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .controls button {
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      background-color: var(--accent);
+    }
+    button.active {
+      background-color: var(--ok);
+    }
+    button:hover {
+      background: #2563eb;
+      transform: scale(1.05);
+      transition: all 0.2s;
+    }
+    .app {
+      display: block;
+      margin: 0 auto;
+      max-width: 1200px;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+    }
+    .section {
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    input, textarea {
+      width: 100%;
+      font-size: 14px;
+      margin-top: 8px;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: var(--bg);
+      color: #e6eef6;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    th {
+      background: var(--card);
+      text-transform: uppercase;
+    }
+    td {
+      background: var(--bg);
+    }
+    .link-btn {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="link-btn">
+      <a href="index.html">
+        <button>Accueil</button>
+      </a>
+      <a href="cidr-manager.html">
+        <button>Gestion</button>
+      </a>
+    </div>
+    <h1>Calculs CIDR</h1>
+    <div id="calculs" class="section">
+      <div class="section">
+        <div class="section-title">Outil de Calcul de Sous-réseaux</div>
+        <label>Adresse IP</label>
+        <input id="calcIp" value="192.168.1.1">
+        <label>Prefix CIDR: <span id="cidrLabel">/24</span></label>
+        <input id="cidrSlider" type="range" min="1" max="30" value="24">
+        <table>
+          <tr><td>Subnet:</td><td id="cSubnet"></td></tr>
+          <tr><td>Masque:</td><td id="cMask"></td></tr>
+          <tr><td>1ère IP utilisable:</td><td id="cFirst"></td></tr>
+          <tr><td>Dernière IP utilisable / Gateway:</td><td id="cLast"></td></tr>
+          <tr><td>Broadcast:</td><td id="cBroadcast"></td></tr>
+          <tr><td>Nb IPs:</td><td id="cCount"></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // CIDR Calculation Logic
+    const calcIpInput = document.getElementById('calcIp');
+    const cidrSlider = document.getElementById('cidrSlider');
+    const cidrLabel = document.getElementById('cidrLabel');
+
+    function ipToInt(ip) {
+      return ip.split('.').reduce((acc, part) => acc * 256 + parseInt(part, 10), 0) >>> 0;
+    }
+
+    function intToIp(num) {
+      return [(num >>> 24) & 255, (num >>> 16) & 255, (num >>> 8) & 255, num & 255].join('.');
+    }
+
+    function calculateCIDR() {
+      const ip = calcIpInput.value.trim();
+      const prefix = parseInt(cidrSlider.value, 10);
+      cidrLabel.textContent = '/' + prefix;
+
+      try {
+        const ipNum = ipToInt(ip);
+        const mask = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+        const network = ipNum & mask;
+        const broadcast = network | (~mask >>> 0);
+        const firstIp = prefix >= 31 ? network : network + 1;
+        const lastIp = prefix >= 31 ? broadcast : broadcast - 1;
+
+        document.getElementById('cSubnet').textContent = intToIp(network) + '/' + prefix;
+        document.getElementById('cMask').textContent = intToIp(mask);
+        document.getElementById('cFirst').textContent = intToIp(firstIp);
+        document.getElementById('cLast').textContent = intToIp(lastIp);
+        document.getElementById('cBroadcast').textContent = intToIp(broadcast);
+        document.getElementById('cCount').textContent =
+          prefix >= 31 ? `2 IPs` : `${Math.pow(2, 32 - prefix) - 2} IPs utilisables`;
+      } catch (error) {
+        ['cSubnet', 'cMask', 'cFirst', 'cLast', 'cBroadcast', 'cCount'].forEach(id => {
+          document.getElementById(id).textContent = 'Erreur';
+        });
+      }
+    }
+
+    calcIpInput.addEventListener('input', calculateCIDR);
+    cidrSlider.addEventListener('input', calculateCIDR);
+
+    // Initialize calculations on load
+    window.onload = calculateCIDR;
+  </script>
+</body>
+</html>
