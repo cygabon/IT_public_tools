@@ -1,0 +1,1519 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BackupLab — Calculateur de stratégie de sauvegarde</title>
+  <style>
+    :root{
+      --bg: #0b0f17;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --border: rgba(255,255,255,.12);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.68);
+      --muted2: rgba(255,255,255,.52);
+      --accent: #7dd3fc;
+      --good: #86efac;
+      --warn: #fde68a;
+      --bad: #fca5a5;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg: #f6f7fb;
+        --panel: rgba(10,16,28,.05);
+        --panel2: rgba(10,16,28,.08);
+        --border: rgba(10,16,28,.12);
+        --text: rgba(10,16,28,.92);
+        --muted: rgba(10,16,28,.66);
+        --muted2: rgba(10,16,28,.52);
+        --shadow: 0 20px 60px rgba(8,10,14,.12);
+      }
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: var(--sans);
+      background: radial-gradient(1200px 800px at 20% 10%, rgba(125,211,252,.18), transparent 50%),
+                  radial-gradient(900px 700px at 85% 15%, rgba(134,239,172,.14), transparent 45%),
+                  radial-gradient(900px 700px at 70% 85%, rgba(252,165,165,.12), transparent 45%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .wrap{
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 18px 44px;
+    }
+
+    header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .brand{
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size: 22px;
+      letter-spacing: .2px;
+      font-weight: 760;
+    }
+
+    .brand p{
+      margin:0;
+      color: var(--muted);
+      max-width: 760px;
+    }
+
+    .pillbar{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+
+    .pill{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: 999px;
+      padding: 10px 12px;
+      box-shadow: var(--shadow);
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      min-height: 40px;
+    }
+
+    .pill b{ font-weight: 740; }
+    .pill small{ color: var(--muted); }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap: 14px;
+      align-items:start;
+    }
+
+    @media (max-width: 980px){
+      .layout{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card .hd{
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+    }
+
+    .card .hd h2{
+      margin:0;
+      font-size: 14px;
+      letter-spacing: .3px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .card .bd{
+      padding: 14px 16px 16px;
+    }
+
+    .section{
+      padding: 12px 0;
+      border-top: 1px dashed rgba(255,255,255,.14);
+    }
+    @media (prefers-color-scheme: light){
+      .section{ border-top: 1px dashed rgba(10,16,28,.16); }
+    }
+    .section:first-child{ border-top: 0; padding-top:0; }
+
+    .grid2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 560px){
+      .grid2{ grid-template-columns:1fr; }
+    }
+
+    label{
+      display:block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    input[type="number"], select, input[type="text"]{
+      width:100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.14);
+      color: var(--text);
+      outline: none;
+    }
+    @media (prefers-color-scheme: light){
+      input[type="number"], select, input[type="text"]{
+        background: rgba(255,255,255,.75);
+      }
+    }
+
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--accent);
+    }
+
+    .row{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+
+    .muted{
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tiny{
+      color: var(--muted2);
+      font-size: 11px;
+    }
+
+    .kbd{
+      font-family: var(--mono);
+      font-size: 11px;
+      border: 1px solid var(--border);
+      padding: 2px 7px;
+      border-radius: 999px;
+      color: var(--muted);
+    }
+
+    .btns{
+      display:flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+    }
+    button{
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      padding: 10px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      transition: transform .05s ease, background .2s ease;
+    }
+    button:hover{ background: rgba(0,0,0,.24); }
+    button:active{ transform: translateY(1px); }
+    @media (prefers-color-scheme: light){
+      button{ background: rgba(255,255,255,.8); }
+      button:hover{ background: rgba(255,255,255,.95); }
+    }
+
+    .chips{
+      display:flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .chip{
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.14);
+      color: var(--muted);
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    @media (prefers-color-scheme: light){
+      .chip{ background: rgba(255,255,255,.7); }
+    }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 99px;
+      background: var(--muted2);
+      display:inline-block;
+    }
+    .chip.good .dot{ background: var(--good); }
+    .chip.warn .dot{ background: var(--warn); }
+    .chip.bad .dot{ background: var(--bad); }
+
+    .big{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .metric{
+      min-width: 220px;
+    }
+    .metric .k{
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .2px;
+    }
+    .metric .v{
+      font-size: 22px;
+      font-weight: 780;
+      margin-top: 3px;
+    }
+    .metric .s{
+      margin-top: 3px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bar{
+      height: 10px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      overflow:hidden;
+      margin-top: 8px;
+    }
+    @media (prefers-color-scheme: light){
+      .bar{ background: rgba(10,16,28,.08); }
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(125,211,252,.8), rgba(134,239,172,.8));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 12px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .split{ grid-template-columns: 1fr; }
+    }
+
+    .box{
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 12px;
+      background: rgba(0,0,0,.12);
+    }
+    @media (prefers-color-scheme: light){
+      .box{ background: rgba(255,255,255,.72); }
+    }
+
+    .list{
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+    }
+    .list li{ margin: 6px 0; }
+
+    .planTitle{
+      font-size: 18px;
+      font-weight: 820;
+      margin: 0 0 8px;
+    }
+    .planDesc{
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .svgWrap{
+      border-radius: var(--radius2);
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.10);
+      overflow:hidden;
+    }
+    @media (prefers-color-scheme: light){
+      .svgWrap{ background: rgba(255,255,255,.65); }
+    }
+    .svgWrap svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .altGrid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 980px){
+      .altGrid{ grid-template-columns: 1fr; }
+    }
+
+    .alt{
+      border: 1px solid var(--border);
+      border-radius: var(--radius2);
+      padding: 12px;
+      background: rgba(0,0,0,.10);
+    }
+    @media (prefers-color-scheme: light){
+      .alt{ background: rgba(255,255,255,.66); }
+    }
+    .alt h3{
+      margin:0 0 6px;
+      font-size: 14px;
+      letter-spacing: .2px;
+    }
+    .alt p{
+      margin:0 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .footer{
+      margin-top: 14px;
+      color: var(--muted2);
+      font-size: 11px;
+    }
+
+    .mono{
+      font-family: var(--mono);
+    }
+
+    .statusLine{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap: wrap;
+      justify-content:flex-end;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,.12);
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+    }
+    @media (prefers-color-scheme: light){
+      .badge{ background: rgba(255,255,255,.7); }
+    }
+    .badge i{
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      display:inline-block;
+      background: var(--muted2);
+    }
+    .badge.good i{ background: var(--good); }
+    .badge.warn i{ background: var(--warn); }
+    .badge.bad i{ background: var(--bad); }
+
+    .sep{
+      height:1px;
+      background: var(--border);
+      margin: 12px 0;
+    }
+
+    .copyOut{
+      width:100%;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(0,0,0,.12);
+      padding: 10px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 11px;
+      white-space: pre-wrap;
+    }
+    @media (prefers-color-scheme: light){
+      .copyOut{ background: rgba(255,255,255,.72); }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>BackupLab — calcul de stratégie de sauvegarde</h1>
+        <p>
+          Mesure une volumétrie et propose un modèle de sauvegarde.
+          Mode “sceptique” : si le niveau de sécurité n’est pas atteignable avec les contraintes renseignées
+        </p>
+      </div>
+      <div class="pillbar">
+        <div class="pill">
+          <div>
+            <b id="pillRec">—</b><br/>
+            <small>Plan recommandé</small>
+          </div>
+        </div>
+        <div class="pill">
+          <div>
+            <b class="mono" id="pillLocal">—</b><br/>
+            <small>Stockage local requis</small>
+          </div>
+        </div>
+        <div class="pill">
+          <div>
+            <b class="mono" id="pillOffsite">—</b><br/>
+            <small>Externalisation (si activée)</small>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- INPUTS -->
+      <section class="card" id="inputsCard">
+        <div class="hd">
+          <h2>Entrées</h2>
+          <div class="statusLine">
+            <span class="kbd">Calcul temps réel</span>
+          </div>
+        </div>
+        <div class="bd">
+          <div class="section">
+            <div class="grid2">
+              <div>
+                <label for="dataTB">Données à protéger (TB)</label>
+                <input id="dataTB" type="number" min="0" step="0.1" value="50" />
+                <div class="tiny">Inclure données + VMs + fichiers applicatifs (en TB “utiles”).</div>
+              </div>
+              <div>
+                <label for="changePct">Taux de changement quotidien (%)</label>
+                <input id="changePct" type="number" min="0" step="0.1" value="2.0" />
+                <div class="tiny">Si tu doutes : mets bas (1–3%) et ajuste après 2–4 semaines de mesures.</div>
+              </div>
+            </div>
+
+            <div class="grid2" style="margin-top:10px;">
+              <div>
+                <label for="overrideIncrTB">Incrémental quotidien moyen (TB) — optionnel</label>
+                <input id="overrideIncrTB" type="number" min="0" step="0.01" placeholder="laisser vide = calculé" />
+                <div class="tiny">Si tu connais la volumétrie réelle des incrémentales, indique-la ici.</div>
+              </div>
+              <div>
+                <label for="diskReduction">Réduction (dédup/compression) sur stockage disque (×)</label>
+                <input id="diskReduction" type="number" min="1" step="0.1" value="1.0" />
+                <div class="tiny">1.0 = pessimiste. Si tu mets 2.0, tu assumes 50% de réduction (pas garanti).</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="grid2">
+              <div>
+                <label for="localAvailTB">Stockage de sauvegarde local disponible (TB)</label>
+                <input id="localAvailTB" type="number" min="0" step="0.1" value="150" />
+                <div class="tiny">Capacité réellement exploitable pour backups (pas la capacité brute marketing).</div>
+              </div>
+              <div>
+                <label for="securityLevel">Niveau de sécurité à atteindre</label>
+                <select id="securityLevel">
+                  <option value="1">1 — Basique (local OK)</option>
+                  <option value="2" selected>2 — Standard (3-2-1 attendu)</option>
+                  <option value="3">3 — Élevé (immutabilité ou air-gap conseillé)</option>
+                  <option value="4">4 — Critique (3-2-1-1-0 visé)</option>
+                </select>
+                <div class="tiny">Plus tu montes, plus l’outil devient exigeant (et casse-tête sans externalisation).</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="grid2">
+              <div>
+                <label for="offsiteType">Externalisation</label>
+                <select id="offsiteType">
+                  <option value="none">Aucune</option>
+                  <option value="lto" selected>LTO (air-gap, bandes externalisées)</option>
+                  <option value="replica">Réplication vers site secondaire</option>
+                  <option value="object">Stockage objet immuable (type S3/immutabilité)</option>
+                </select>
+                <div class="tiny">Si tu coches “Aucune” en sécurité 2+, l’outil va te dire que ça ne colle pas.</div>
+              </div>
+              <div>
+                <label for="offsiteRetentionMonths">Rétention externalisée (mois)</label>
+                <input id="offsiteRetentionMonths" type="number" min="0" step="1" value="12" />
+                <div class="tiny">Ex: garder 12 “points mensuels” hors site.</div>
+              </div>
+            </div>
+
+            <div id="ltoBlock" style="margin-top:10px;">
+              <div class="grid2">
+                <div>
+                  <label for="ltoGen">Génération LTO (capacité native)</label>
+                  <select id="ltoGen">
+                    <option value="6">LTO-7 — 6 TB</option>
+                    <option value="12" selected>LTO-8 — 12 TB</option>
+                    <option value="18">LTO-9 — 18 TB</option>
+                  </select>
+                  <div class="tiny">Je reste prudent : la compression “miracle” varie énormément selon les données.</div>
+                </div>
+                <div>
+                  <label for="ltoCompression">Facteur compression (×) — optionnel</label>
+                  <input id="ltoCompression" type="number" min="1" max="2.5" step="0.1" value="1.0" />
+                  <div class="tiny">1.0 = on ne compte pas sur la compression. Plus réaliste si tu veux éviter les surprises.</div>
+                </div>
+              </div>
+
+              <div class="grid2" style="margin-top:10px;">
+                <div>
+                  <label for="ltoMaxTapes">Stockage des bandes LTO disponible (nb max) — optionnel</label>
+                  <input id="ltoMaxTapes" type="number" min="0" step="1" placeholder="ex: 80" />
+                  <div class="tiny">Si tu as une limite physique/budget (coffre, prestataire, etc.).</div>
+                </div>
+                <div>
+                  <label for="offsitePayload">Ce que tu externalises</label>
+                  <select id="offsitePayload">
+                    <option value="monthly_full" selected>Mensuel : Full</option>
+                    <option value="monthly_full_plus_incr">Mensuel : Full + incr du mois</option>
+                    <option value="weekly_full">Hebdo : Full</option>
+                    <option value="weekly_full_plus_incr">Hebdo : Full + incr semaine</option>
+                  </select>
+                  <div class="tiny">Plus tu exportes souvent, plus c’est robuste… et plus ça coûte en volumes.</div>
+                </div>
+              </div>
+            </div>
+
+            <div id="nonLtoHint" class="tiny" style="margin-top:10px; display:none;">
+              Note : pour “site secondaire” ou “objet immuable”, l’outil estime la volumétrie, mais pas le coût ni la bande passante.
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="grid2">
+              <div>
+                <label for="retDailyDays">Rétention incr quotidiennes (jours)</label>
+                <input id="retDailyDays" type="number" min="0" step="1" value="30" />
+              </div>
+              <div>
+                <label for="retWeekly">Rétention full hebdo (semaines)</label>
+                <input id="retWeekly" type="number" min="0" step="1" value="8" />
+              </div>
+            </div>
+            <div class="grid2" style="margin-top:10px;">
+              <div>
+                <label for="retMonthly">Rétention full mensuel (mois)</label>
+                <input id="retMonthly" type="number" min="0" step="1" value="12" />
+              </div>
+              <div>
+                <label for="verifyRate">Vérification (0..100)</label>
+                <input id="verifyRate" type="range" min="0" max="100" step="5" value="40" />
+                <div class="tiny">
+                  Niveau de “discipline” estimé (tests de restauration, checksums, rapports). Sans ça, “0 erreurs” est un vœu pieux.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section">
+            <div class="btns">
+              <button id="btnReset" type="button">Réinitialiser</button>
+              <button id="btnSave" type="button">Sauver mes valeurs</button>
+            </div>
+            <div class="footer">
+              Important : les calculs sont volontairement <span class="mono">approximatifs</span>. C’est un outil de cadrage, pas un dimensionnement final.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OUTPUTS -->
+      <section class="card" id="outputsCard">
+        <div class="hd">
+          <h2>Résultats & recommandations</h2>
+          <div class="statusLine" id="statusLine"></div>
+        </div>
+        <div class="bd">
+          <div class="split">
+            <div>
+              <h3 class="planTitle" id="planTitle">—</h3>
+              <p class="planDesc" id="planDesc">—</p>
+
+              <div class="chips" id="chips"></div>
+
+              <div class="sep"></div>
+
+              <div class="big">
+                <div class="metric">
+                  <div class="k">Incrémental quotidien estimé</div>
+                  <div class="v mono" id="mIncr">—</div>
+                  <div class="s" id="mIncrNote">—</div>
+                </div>
+
+                <div class="metric">
+                  <div class="k">Stockage local requis</div>
+                  <div class="v mono" id="mLocalNeed">—</div>
+                  <div class="s" id="mLocalGap">—</div>
+                  <div class="bar"><i id="barLocal"></i></div>
+                </div>
+
+                <div class="metric">
+                  <div class="k">Externalisation estimée</div>
+                  <div class="v mono" id="mOffsiteNeed">—</div>
+                  <div class="s" id="mOffsiteDetail">—</div>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="box">
+                <div class="row" style="justify-content:space-between;">
+                  <div>
+                    <div class="k muted">Schéma</div>
+                    <div class="tiny">Illustration simplifiée (copie locale + copie externe si activée).</div>
+                  </div>
+                  <div class="badge" id="badgeFeasible"><i></i><span id="badgeText">—</span></div>
+                </div>
+                <div style="height:10px;"></div>
+                <div class="svgWrap" id="diagram"></div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="box">
+                <div class="k muted">A clarifier</div>
+                <ul class="list" id="doubts"></ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="box">
+                <div class="k muted">Synthèse (copiable)</div>
+                <div class="tiny">Utile pour coller dans un mail / un CR.</div>
+                <div style="height:10px;"></div>
+                <div class="copyOut" id="reportBox">—</div>
+                <div class="btns" style="margin-top:10px;">
+                  <button id="btnCopy" type="button">Copier</button>
+                </div>
+              </div>
+
+              <div class="sep"></div>
+
+              <div class="box">
+                <div class="k muted">Alternatives réalistes</div>
+                <div class="tiny">Parce qu’il n’y a jamais “un” seul bon modèle.</div>
+                <div style="height:10px;"></div>
+                <div class="altGrid" id="alts"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="footer">
+            Rappel brut : une stratégie “sécurisée” sans tests de restauration réguliers, c’est souvent une illusion.
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --------- Helpers
+    const nf = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
+    const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+    const safeNum = (v, def=0) => {
+      const n = Number(v);
+      return Number.isFinite(n) ? n : def;
+    };
+
+    function fmtTB(tb){
+      if (!Number.isFinite(tb)) return "—";
+      if (tb < 1) return nf.format(tb * 1024) + " GB";
+      return nf.format(tb) + " TB";
+    }
+
+    function fmtPct(p){
+      return nf.format(p) + " %";
+    }
+
+    function daysPerMonthApprox(){ return 30; }
+    function weeksPerMonthApprox(){ return 4.35; }
+
+    function getDefaults(){
+      return {
+        dataTB: 50,
+        changePct: 2.0,
+        overrideIncrTB: "",
+        diskReduction: 1.0,
+        localAvailTB: 150,
+        securityLevel: 2,
+        offsiteType: "lto",
+        offsiteRetentionMonths: 12,
+        ltoGen: 12,
+        ltoCompression: 1.0,
+        ltoMaxTapes: "",
+        offsitePayload: "monthly_full",
+        retDailyDays: 30,
+        retWeekly: 8,
+        retMonthly: 12,
+        verifyRate: 40
+      };
+    }
+
+    const el = (id)=>document.getElementById(id);
+
+    const inputs = {
+      dataTB: el("dataTB"),
+      changePct: el("changePct"),
+      overrideIncrTB: el("overrideIncrTB"),
+      diskReduction: el("diskReduction"),
+      localAvailTB: el("localAvailTB"),
+      securityLevel: el("securityLevel"),
+      offsiteType: el("offsiteType"),
+      offsiteRetentionMonths: el("offsiteRetentionMonths"),
+      ltoGen: el("ltoGen"),
+      ltoCompression: el("ltoCompression"),
+      ltoMaxTapes: el("ltoMaxTapes"),
+      offsitePayload: el("offsitePayload"),
+      retDailyDays: el("retDailyDays"),
+      retWeekly: el("retWeekly"),
+      retMonthly: el("retMonthly"),
+      verifyRate: el("verifyRate")
+    };
+
+    const ui = {
+      pillRec: el("pillRec"),
+      pillLocal: el("pillLocal"),
+      pillOffsite: el("pillOffsite"),
+      statusLine: el("statusLine"),
+      planTitle: el("planTitle"),
+      planDesc: el("planDesc"),
+      chips: el("chips"),
+      mIncr: el("mIncr"),
+      mIncrNote: el("mIncrNote"),
+      mLocalNeed: el("mLocalNeed"),
+      mLocalGap: el("mLocalGap"),
+      barLocal: el("barLocal"),
+      mOffsiteNeed: el("mOffsiteNeed"),
+      mOffsiteDetail: el("mOffsiteDetail"),
+      diagram: el("diagram"),
+      doubts: el("doubts"),
+      alts: el("alts"),
+      reportBox: el("reportBox"),
+      badgeFeasible: el("badgeFeasible"),
+      badgeText: el("badgeText"),
+      ltoBlock: el("ltoBlock"),
+      nonLtoHint: el("nonLtoHint")
+    };
+
+    // --------- Strategy templates (simplified, opinionated)
+    // Notes:
+    // - We keep calculations deliberately conservative.
+    // - Local size counts: daily incr * retDailyDays + full weekly * retWeekly + full monthly * retMonthly
+    // - This double-counts overlaps; it is acceptable for "cadrage", not final sizing.
+    const STRATS = [
+      {
+        id: "local_simple",
+        name: "Local minimaliste : incr quotidiennes + full mensuelle",
+        desc: "Simple, mais vulnérable si ransomware / incendie / vol : tout reste sur site.",
+        dailyIncr: true,
+        weeklyFull: false,
+        monthlyFull: true,
+        offsite: false,
+        immutability: false,
+        verificationNeeded: false
+      },
+      {
+        id: "local_gfs",
+        name: "GFS local : incr quotidiennes + full hebdo + full mensuelle",
+        desc: "Mieux structuré (points de restauration hebdo/mensuels), mais toujours sans copie hors site.",
+        dailyIncr: true,
+        weeklyFull: true,
+        monthlyFull: true,
+        offsite: false,
+        immutability: false,
+        verificationNeeded: true
+      },
+      {
+        id: "gfs_offsite",
+        name: "3-2-1 pragmatique : GFS + externalisation périodique",
+        desc: "Une copie hors site pour survivre à un sinistre. Robustesse dépend de la fréquence d’export et de la discipline.",
+        dailyIncr: true,
+        weeklyFull: true,
+        monthlyFull: true,
+        offsite: true,
+        immutability: false,
+        verificationNeeded: true
+      },
+      {
+        id: "high_32110",
+        name: "Renforcé : GFS + externalisation + couche immuable/air-gap",
+        desc: "Cible ransomware : une copie immuable ou offline (air-gap). Sans tests de restauration, ça reste théorique.",
+        dailyIncr: true,
+        weeklyFull: true,
+        monthlyFull: true,
+        offsite: true,
+        immutability: true, // can be satisfied by offsiteType object or LTO air-gap; also can be local immutable snapshots (not modeled)
+        verificationNeeded: true
+      }
+    ];
+
+    function readState(){
+      const s = {};
+      s.dataTB = safeNum(inputs.dataTB.value, 0);
+      s.changePct = safeNum(inputs.changePct.value, 0);
+      s.overrideIncrTB = (inputs.overrideIncrTB.value || "").trim();
+      s.diskReduction = clamp(safeNum(inputs.diskReduction.value, 1), 1, 20);
+      s.localAvailTB = safeNum(inputs.localAvailTB.value, 0);
+      s.securityLevel = safeNum(inputs.securityLevel.value, 1);
+      s.offsiteType = inputs.offsiteType.value;
+      s.offsiteRetentionMonths = clamp(safeNum(inputs.offsiteRetentionMonths.value, 0), 0, 240);
+
+      s.ltoGen = safeNum(inputs.ltoGen.value, 12);
+      s.ltoCompression = clamp(safeNum(inputs.ltoCompression.value, 1.0), 1.0, 2.5);
+      s.ltoMaxTapes = (inputs.ltoMaxTapes.value || "").trim();
+      s.offsitePayload = inputs.offsitePayload.value;
+
+      s.retDailyDays = clamp(safeNum(inputs.retDailyDays.value, 0), 0, 3650);
+      s.retWeekly = clamp(safeNum(inputs.retWeekly.value, 0), 0, 520);
+      s.retMonthly = clamp(safeNum(inputs.retMonthly.value, 0), 0, 240);
+      s.verifyRate = clamp(safeNum(inputs.verifyRate.value, 0), 0, 100);
+      return s;
+    }
+
+    function getDailyIncrTB(s){
+      if (s.overrideIncrTB !== ""){
+        const v = safeNum(s.overrideIncrTB, NaN);
+        if (Number.isFinite(v) && v >= 0) return v;
+      }
+      const pct = clamp(s.changePct, 0, 100) / 100;
+      return s.dataTB * pct;
+    }
+
+    function offsiteCadenceFromPayload(payload){
+      if (payload.startsWith("monthly")) return "monthly";
+      return "weekly";
+    }
+
+    function offsiteExportVolumeTB(s, dailyIncrTB){
+      // What you export per cadence “event”
+      const cadence = offsiteCadenceFromPayload(s.offsitePayload);
+      const full = s.dataTB;
+      const dpm = daysPerMonthApprox();
+
+      if (cadence === "monthly"){
+        if (s.offsitePayload === "monthly_full") return full;
+        if (s.offsitePayload === "monthly_full_plus_incr") return full + dailyIncrTB * dpm;
+      } else {
+        if (s.offsitePayload === "weekly_full") return full;
+        if (s.offsitePayload === "weekly_full_plus_incr") return full + dailyIncrTB * 7;
+      }
+      return full;
+    }
+
+    function offsiteSetsCount(s){
+      // Number of "export events" kept offsite across retention
+      const cadence = offsiteCadenceFromPayload(s.offsitePayload);
+      if (s.offsiteRetentionMonths <= 0) return 0;
+      if (cadence === "monthly") return Math.max(1, Math.round(s.offsiteRetentionMonths));
+      // weekly sets
+      return Math.max(1, Math.round(s.offsiteRetentionMonths * weeksPerMonthApprox()));
+    }
+
+    function ltoEffectiveTB(s){
+      return s.ltoGen * s.ltoCompression;
+    }
+
+    function localNeedTBForStrat(strat, s, dailyIncrTB){
+      const full = s.dataTB;
+      const dailyPart = strat.dailyIncr ? dailyIncrTB * s.retDailyDays : 0;
+      const weeklyPart = strat.weeklyFull ? full * s.retWeekly : 0;
+      const monthlyPart = strat.monthlyFull ? full * s.retMonthly : 0;
+      const raw = dailyPart + weeklyPart + monthlyPart;
+
+      // Disk reduction = optimistic ratio. We divide by it (2x reduction -> half storage).
+      return raw / Math.max(1, s.diskReduction);
+    }
+
+    function offsiteNeed(s, strat, dailyIncrTB){
+      if (!strat.offsite || s.offsiteType === "none") return { totalTB: 0, detail: "Aucune", tapes: 0, ok: true, notes: [] };
+
+      const notes = [];
+      const exportTB = offsiteExportVolumeTB(s, dailyIncrTB);
+      const sets = offsiteSetsCount(s);
+
+      // extra copies: for critical level we often keep 2 independent copies (policy), very conservative
+      const copiesFactor = (s.securityLevel >= 4) ? 2 : 1;
+      if (copiesFactor === 2) notes.push("Hypothèse conservatrice : double jeu offsite (2 copies).");
+
+      // spare factor for tape management
+      const spare = (s.offsiteType === "lto") ? 1.10 : 1.0;
+
+      const totalTB = exportTB * sets * copiesFactor * spare;
+
+      if (s.offsiteType === "lto"){
+        const cap = Math.max(0.1, ltoEffectiveTB(s));
+        const tapes = Math.ceil(totalTB / cap);
+        let ok = true;
+        const maxTapes = s.ltoMaxTapes === "" ? null : safeNum(s.ltoMaxTapes, null);
+        if (Number.isFinite(maxTapes) && maxTapes !== null && maxTapes >= 0){
+          if (tapes > maxTapes){
+            ok = false;
+            notes.push("Limite de stockage de bandes dépassée.");
+          }
+        }
+        return {
+          totalTB,
+          detail: `${tapes} bande(s) (≈ ${fmtTB(totalTB)} au total, capacité/bande ≈ ${fmtTB(cap)})`,
+          tapes,
+          ok,
+          notes
+        };
+      }
+
+      if (s.offsiteType === "replica"){
+        notes.push("Réplication ≠ air-gap : un ransomware peut parfois chiffrer aussi la copie distante si elle n'est pas immuable.");
+      }
+      if (s.offsiteType === "object"){
+        notes.push("Si l’immutabilité (WORM) est activée correctement, c’est une très bonne protection contre ransomware.");
+      }
+      return {
+        totalTB,
+        detail: `${fmtTB(totalTB)} (≈ ${sets} point(s) offsite, cadence ${offsiteCadenceFromPayload(s.offsitePayload)})`,
+        tapes: 0,
+        ok: true,
+        notes
+      };
+    }
+
+    function securityGaps(s, strat){
+      // "Hard truth" checks.
+      const gaps = [];
+      const offsiteEnabled = (s.offsiteType !== "none");
+      const hasOffsite = strat.offsite && offsiteEnabled;
+
+      // Level 2: expect 3-2-1 => offsite
+      if (s.securityLevel >= 2 && !hasOffsite){
+        gaps.push("Niveau 2+ : sans externalisation, tu n’es pas sur du 3-2-1 (sinistre = tout perdu).");
+      }
+
+      // Level 3: want immutability or air-gap
+      if (s.securityLevel >= 3){
+        const hasAirGap = (s.offsiteType === "lto") && hasOffsite;
+        const hasImmut = (s.offsiteType === "object") && hasOffsite;
+        if (!hasAirGap && !hasImmut){
+          gaps.push("Niveau 3+ : pas d’air-gap (LTO) ni d’immutabilité offsite (objet). Ransomware = gros doute.");
+        }
+      }
+
+      // Level 4: want strong process (verification)
+      if (s.securityLevel >= 4){
+        if (s.verifyRate < 60){
+          gaps.push("Niveau 4 : discipline de vérification trop faible (tests/restauration). Le “0 erreur” est irréaliste.");
+        }
+        if (s.retWeekly < 4){
+          gaps.push("Niveau 4 : rétention hebdo faible. En pratique, il faut des points hebdo robustes.");
+        }
+      }
+
+      // Always: data size or change rate missing -> doubtful
+      if (s.dataTB <= 0) gaps.push("Données à protéger = 0 : impossible de dimensionner.");
+      if (s.overrideIncrTB === "" && (s.changePct <= 0 || s.changePct > 50)){
+        gaps.push("Taux de changement inhabituel : le calcul d’incrémentales est peut-être faux.");
+      }
+
+      return gaps;
+    }
+
+    function featuresForDisplay(s, strat, offsiteRes){
+      const feats = [];
+      const hasOffsite = strat.offsite && s.offsiteType !== "none";
+      const airGap = hasOffsite && (s.offsiteType === "lto");
+      const immut = (hasOffsite && s.offsiteType === "object") || (s.securityLevel >= 3 && airGap);
+
+      feats.push({label: "Copies", kind: "neutral", value: hasOffsite ? "≥ 3 (3-2-1 possible)" : "2 max (local seulement)"});
+      feats.push({label: "Air-gap", kind: airGap ? "good" : "warn", value: airGap ? "Oui (LTO)" : "Non / incertain"});
+      feats.push({label: "Immutabilité", kind: immut ? "good" : (s.securityLevel >= 3 ? "warn" : "neutral"), value: immut ? "Oui / probable" : "Non"});
+      feats.push({label: "Vérif", kind: (s.verifyRate >= 60) ? "good" : (s.verifyRate >= 35 ? "warn" : "bad"), value: `≈ ${s.verifyRate}%`});
+
+      // RPO estimate
+      let rpo = "—";
+      if (strat.dailyIncr) rpo = "≤ 24h";
+      else if (strat.weeklyFull) rpo = "≤ 7j";
+      else if (strat.monthlyFull) rpo = "≤ 30j";
+      feats.push({label: "RPO typique", kind: strat.dailyIncr ? "good" : "warn", value: rpo});
+
+      // Offsite RPO depends on cadence
+      if (hasOffsite){
+        const cad = offsiteCadenceFromPayload(s.offsitePayload);
+        const rpoOff = (cad === "weekly") ? "≤ 7j (offsite)" : "≤ 30j (offsite)";
+        feats.push({label: "RPO offsite", kind: (cad === "weekly") ? "good" : "warn", value: rpoOff});
+      } else {
+        feats.push({label: "RPO offsite", kind: "bad", value: "Aucun"});
+      }
+
+      if (offsiteRes.notes.length){
+        feats.push({label: "Hypothèses", kind: "warn", value: offsiteRes.notes[0]});
+      }
+
+      return feats;
+    }
+
+    function scoreStrat(s, strat, localTB, offsiteRes, gaps){
+      // Higher is better.
+      let score = 0;
+
+      // Base: fit the security objective
+      if (gaps.length === 0) score += 120;
+      else score -= gaps.length * 35;
+
+      // Prefer offsite when security >= 2
+      if (s.securityLevel >= 2 && strat.offsite && s.offsiteType !== "none") score += 50;
+
+      // Prefer air-gap/immutability for higher levels
+      if (s.securityLevel >= 3){
+        if (s.offsiteType === "lto" && strat.offsite) score += 45;
+        if (s.offsiteType === "object" && strat.offsite) score += 45;
+      }
+
+      // Penalize infeasible volumes
+      const localAvail = Math.max(0.01, s.localAvailTB);
+      const ratio = localTB / localAvail;
+      if (ratio <= 1.0) score += 25;
+      else score -= 160 + (ratio - 1.0) * 120;
+
+      // Smaller is nicer (but not at the cost of security)
+      score -= localTB * 0.25;
+
+      // Tape overload penalty
+      if (s.offsiteType === "lto" && offsiteRes.tapes){
+        score -= offsiteRes.tapes * 0.6;
+        if (!offsiteRes.ok) score -= 120;
+      }
+
+      // Verification discipline
+      score += (s.verifyRate / 100) * 25;
+
+      return score;
+    }
+
+    function buildDiagram(s, strat){
+      const hasOffsite = strat.offsite && s.offsiteType !== "none";
+      const offLabel = (s.offsiteType === "lto") ? "OFFSITE LTO" :
+                       (s.offsiteType === "object") ? "OFFSITE OBJET\nIMMUTABLE" :
+                       (s.offsiteType === "replica") ? "SITE\nSECONDAIRE" : "OFFSITE";
+      const cadence = hasOffsite ? offsiteCadenceFromPayload(s.offsitePayload) : "—";
+
+      const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || "#7dd3fc";
+      const muted = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || "rgba(255,255,255,.68)";
+      const border = getComputedStyle(document.documentElement).getPropertyValue('--border').trim() || "rgba(255,255,255,.12)";
+
+      // Simple inline SVG. We do not depend on external assets.
+      const svg = `
+        <svg viewBox="0 0 900 280" role="img" aria-label="Schéma de copies">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="${accent}" stop-opacity=".85"/>
+              <stop offset="1" stop-color="${accent}" stop-opacity=".35"/>
+            </linearGradient>
+            <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="rgba(0,0,0,.22)"/>
+            </filter>
+          </defs>
+
+          <rect x="18" y="18" width="864" height="244" rx="20" fill="transparent" stroke="${border}" />
+
+          <!-- nodes -->
+          <g filter="url(#sh)">
+            <rect x="60" y="70" width="200" height="140" rx="18" fill="rgba(0,0,0,.12)" stroke="${border}"/>
+            <rect x="350" y="70" width="200" height="140" rx="18" fill="rgba(0,0,0,.12)" stroke="${border}"/>
+            ${hasOffsite ? `<rect x="640" y="70" width="200" height="140" rx="18" fill="rgba(0,0,0,.12)" stroke="${border}"/>` : ``}
+          </g>
+
+          <!-- labels -->
+          <g font-family="ui-sans-serif, system-ui" fill="${muted}">
+            <text x="160" y="110" text-anchor="middle" font-size="13" letter-spacing=".6">PRODUCTION</text>
+            <text x="160" y="140" text-anchor="middle" font-size="28" fill="url(#g)" font-weight="800">DATA</text>
+            <text x="160" y="168" text-anchor="middle" font-size="12">Données primaires</text>
+
+            <text x="450" y="110" text-anchor="middle" font-size="13" letter-spacing=".6">BACKUP LOCAL</text>
+            <text x="450" y="142" text-anchor="middle" font-size="16" fill="url(#g)" font-weight="800">
+              ${strat.dailyIncr ? "INCR/J" : "—"} ${strat.weeklyFull ? "+ FULL/W" : ""} ${strat.monthlyFull ? "+ FULL/M" : ""}
+            </text>
+            <text x="450" y="168" text-anchor="middle" font-size="12">Points de restauration</text>
+
+            ${hasOffsite ? `
+              <text x="740" y="110" text-anchor="middle" font-size="13" letter-spacing=".6">EXTERNALISATION</text>
+              <text x="740" y="142" text-anchor="middle" font-size="13" fill="url(#g)" font-weight="800">
+                ${offLabel.replaceAll("\n"," ")}
+              </text>
+              <text x="740" y="168" text-anchor="middle" font-size="12">Cadence : ${cadence}</text>
+            ` : `
+              <text x="740" y="142" text-anchor="middle" font-size="12">Externalisation désactivée</text>
+            `}
+          </g>
+
+          <!-- arrows -->
+          <g stroke="url(#g)" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity=".9">
+            <path d="M 270 140 C 300 140, 320 140, 340 140" />
+            <path d="M 332 132 L 344 140 L 332 148" />
+            ${hasOffsite ? `
+              <path d="M 560 140 C 590 140, 610 140, 630 140" />
+              <path d="M 622 132 L 634 140 L 622 148" />
+            ` : ``}
+          </g>
+
+          <!-- footer -->
+          <g font-family="ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas" fill="${muted}" opacity=".9">
+            <text x="40" y="250" font-size="11">NB: schéma simplifié. Le vrai monde inclut dédup, fenêtres, erreurs, tests de restauration.</text>
+          </g>
+        </svg>
+      `;
+      return svg;
+    }
+
+    function makeReport(s, choice, localTB, offsiteRes, dailyIncrTB, gaps){
+      const cad = offsiteCadenceFromPayload(s.offsitePayload);
+      const exportTB = (choice.offsite && s.offsiteType !== "none") ? offsiteExportVolumeTB(s, dailyIncrTB) : 0;
+      const sets = (choice.offsite && s.offsiteType !== "none") ? offsiteSetsCount(s) : 0;
+
+      const lines = [];
+      lines.push(`BackupLab — synthèse`);
+      lines.push(`Plan recommandé : ${choice.name}`);
+      lines.push(`Niveau sécurité ciblé : ${s.securityLevel} / 4`);
+      lines.push(`Données à protéger : ${fmtTB(s.dataTB)} | Taux changement : ${fmtPct(s.changePct)} | Incr/J : ${fmtTB(dailyIncrTB)}`);
+      lines.push(`Local requis (approx) : ${fmtTB(localTB)} (réduction disque ×${nf.format(s.diskReduction)}) | Local dispo : ${fmtTB(s.localAvailTB)}`);
+
+      if (choice.offsite && s.offsiteType !== "none"){
+        lines.push(`Externalisation : ${s.offsiteType.toUpperCase()} | Cadence : ${cad} | Payload : ${s.offsitePayload}`);
+        lines.push(`Export par point : ${fmtTB(exportTB)} | Points conservés : ${sets}`);
+        if (s.offsiteType === "lto"){
+          lines.push(`LTO : ${nf.format(s.ltoGen)} TB natif ×${nf.format(s.ltoCompression)} = ${fmtTB(ltoEffectiveTB(s))}/bande`);
+          lines.push(`Bandes estimées : ${offsiteRes.tapes} | Volume offsite total (approx) : ${fmtTB(offsiteRes.totalTB)}`);
+        } else {
+          lines.push(`Volume offsite total (approx) : ${fmtTB(offsiteRes.totalTB)}`);
+        }
+      } else {
+        lines.push(`Externalisation : AUCUNE (risque majeur en cas de sinistre / ransomware)`);
+      }
+
+      lines.push(`Rétentions : incr=${s.retDailyDays}j | full-hebdo=${s.retWeekly}sem | full-mensuel=${s.retMonthly}mois | offsite=${s.offsiteRetentionMonths}mois`);
+      lines.push(`Vérification/discipline estimée : ${s.verifyRate}%`);
+
+      if (gaps.length){
+        lines.push(``);
+        lines.push(`Gaps / doutes :`);
+        gaps.forEach(g => lines.push(`- ${g}`));
+      }
+
+      return lines.join("\n");
+    }
+
+    function buildChips(feats){
+      ui.chips.innerHTML = "";
+      for (const f of feats){
+        const div = document.createElement("div");
+        div.className = "chip " + (f.kind || "neutral");
+        div.innerHTML = `<span class="dot"></span><span><b>${f.label}:</b> ${escapeHtml(f.value)}</span>`;
+        ui.chips.appendChild(div);
+      }
+    }
+
+    function escapeHtml(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    function choosePlans(s){
+      const dailyIncrTB = getDailyIncrTB(s);
+
+      const scored = STRATS.map(strat => {
+        const localTB = localNeedTBForStrat(strat, s, dailyIncrTB);
+        const offsiteRes = offsiteNeed(s, strat, dailyIncrTB);
+        const gaps = securityGaps(s, strat);
+
+        const score = scoreStrat(s, strat, localTB, offsiteRes, gaps);
+        return { strat, localTB, offsiteRes, gaps, score };
+      }).sort((a,b)=>b.score - a.score);
+
+      return { dailyIncrTB, ranked: scored };
+    }
+
+    function doubtsList(s, chosen, gaps, localTB, offsiteRes, dailyIncrTB){
+      const doubts = [];
+
+      // Structural doubts
+      doubts.push("Quel RPO/RTO réel te faut-il (heures, pas 'au feeling') ? Ça change complètement le modèle.");
+      doubts.push("As-tu une contrainte légale (durée de rétention, WORM, secteur) ? Sinon on dimensionne à l’aveugle.");
+      doubts.push("As-tu mesuré la volumétrie réelle (incr/jour, pics hebdo, bases) ? Le % de changement est souvent trompeur.");
+
+      // Specific warnings
+      if (s.securityLevel >= 2 && (s.offsiteType === "none" || !chosen.offsite)){
+        doubts.push("Tu vises un niveau 2+ sans externalisation : en cas de sinistre (ou ransomware + propagation), c’est incohérent.");
+      }
+      if (s.securityLevel >= 3 && s.offsiteType === "replica"){
+        doubts.push("Réplication site secondaire sans immutabilité : souvent insuffisant contre ransomware (ça réplique le désastre).");
+      }
+      if (localTB > s.localAvailTB * 1.05){
+        doubts.push("Ton stockage local de sauvegarde semble insuffisant : soit tu réduis la rétention, soit tu ajoutes capacité/dédup, soit tu changes de modèle.");
+      }
+      if (s.offsiteType === "lto" && chosen.offsite && !offsiteRes.ok){
+        doubts.push("LTO : la limite de stockage de bandes indiquée n’est pas compatible avec la rétention demandée.");
+      }
+      if (s.verifyRate < 40){
+        doubts.push("Sans tests de restauration réguliers, tu risques de découvrir l’échec le jour où tu en as besoin.");
+      }
+      if (dailyIncrTB > s.dataTB * 0.15){
+        doubts.push("Incr/jour très élevé vs total : soit ton % est trop haut, soit tu as beaucoup de données 'churn' (logs, DB). Il faut segmenter.");
+      }
+
+      // Make sure we include the computed gaps explicitly
+      for (const g of gaps){
+        doubts.push(g);
+      }
+
+      // Dedup doubt
+      if (s.diskReduction > 1.5){
+        doubts.push("La réduction (dédup/compression) est une hypothèse. Si elle ne tient pas, ton dimensionnement explose.");
+      }
+      if (s.offsiteType === "lto" && s.ltoCompression > 1.0){
+        doubts.push("Compression LTO : prudence. Selon les données, tu peux rester proche de 1.0.");
+      }
+
+      return Array.from(new Set(doubts)).slice(0, 10);
+    }
+
+    function feasibilityBadge(s, gaps, localTB, offsiteRes){
+      // We consider feasible if: no gaps of security AND volumes fit reasonably
+      const localOk = (s.localAvailTB <= 0) ? false : (localTB <= s.localAvailTB * 1.02);
+      const offOk = offsiteRes.ok;
+      const gapHard = gaps.length > 0;
+
+      if (!gapHard && localOk && offOk) return {kind:"good", text:"Atteignable (avec tes hypothèses)"};
+      if (localOk && offOk && gapHard) return {kind:"warn", text:"Partiel (objectif sécurité discutable)"};
+      if (!localOk || !offOk) return {kind:"bad", text:"Non atteignable sans ajustement"};
+      return {kind:"warn", text:"Incertain"};
+    }
+
+    function updateUI(){
+      const s = readState();
+
+      // Toggle LTO block visibility
+      const isLto = s.offsiteType === "lto";
+      ui.ltoBlock.style.display = isLto ? "block" : "none";
+      ui.nonLtoHint.style.display = isLto ? "none" : (s.offsiteType === "none" ? "none" : "block");
+
+      const { dailyIncrTB, ranked } = choosePlans(s);
+      const top = ranked[0];
+      const choice = top.strat;
+
+      // Compute
+      const localTB = top.localTB;
+      const offsiteRes = top.offsiteRes;
+      const gaps = top.gaps;
+
+      // Header pills
+      ui.pillRec.textContent = choice.name.split(" : ")[0];
+      ui.pillLocal.textContent = fmtTB(localTB);
+      ui.pillOffsite.textContent = (choice.offsite && s.offsiteType !== "none") ? fmtTB(offsiteRes.totalTB) : "Aucune";
+
+      // Status line
+      const conf = clamp(Math.round(35 + (s.verifyRate/100)*35 + (s.offsiteType !== "none" ? 20 : 0) + (s.overrideIncrTB !== "" ? 10 : 0)), 0, 100);
+      ui.statusLine.innerHTML = `
+        <span class="badge ${conf >= 70 ? "good" : (conf >= 45 ? "warn" : "bad")}"><i></i>Confiance ≈ ${conf}%</span>
+        <span class="badge ${s.securityLevel >= 3 ? "warn" : "good"}"><i></i>Modèle = simplifié</span>
+      `;
+
+      // Main text
+      ui.planTitle.textContent = choice.name;
+      ui.planDesc.textContent = choice.desc;
+
+      // Metrics
+      ui.mIncr.textContent = fmtTB(dailyIncrTB);
+      ui.mIncrNote.textContent = (s.overrideIncrTB !== "")
+        ? "Saisi manuellement (réalité terrain)."
+        : `Calculé : ${fmtTB(s.dataTB)} × ${fmtPct(s.changePct)}.`;
+
+      ui.mLocalNeed.textContent = fmtTB(localTB);
+
+      const gapTB = s.localAvailTB - localTB;
+      const gapTxt = (s.localAvailTB <= 0)
+        ? "Stockage local dispo non renseigné."
+        : (gapTB >= 0 ? `Marge : +${fmtTB(gapTB)}` : `Déficit : ${fmtTB(Math.abs(gapTB))}`);
+      ui.mLocalGap.textContent = gapTxt;
+
+      const pct = (s.localAvailTB > 0) ? clamp((localTB / s.localAvailTB) * 100, 0, 180) : 0;
+      ui.barLocal.style.width = clamp(pct, 0, 100) + "%";
+
+      // Offsite
+      if (choice.offsite && s.offsiteType !== "none"){
+        ui.mOffsiteNeed.textContent = fmtTB(offsiteRes.totalTB);
+        ui.mOffsiteDetail.textContent = offsiteRes.detail;
+      } else {
+        ui.mOffsiteNeed.textContent = "Aucune";
+        ui.mOffsiteDetail.textContent = "Pas de copie hors site.";
+      }
+
+      // Diagram
+      ui.diagram.innerHTML = buildDiagram(s, choice);
+
+      // Chips
+      const feats = featuresForDisplay(s, choice, offsiteRes);
+      buildChips(feats);
+
+      // Doubts / questions
+      const doubts = doubtsList(s, choice, gaps, localTB, offsiteRes, dailyIncrTB);
+      ui.doubts.innerHTML = "";
+      doubts.forEach(d => {
+        const li = document.createElement("li");
+        li.textContent = d;
+        ui.doubts.appendChild(li);
+      });
+
+      // Badge feasible
+      const badge = feasibilityBadge(s, gaps, localTB, offsiteRes);
+      ui.badgeFeasible.className = "badge " + badge.kind;
+      ui.badgeText.textContent = badge.text;
+
+      // Alternatives
+      ui.alts.innerHTML = "";
+      ranked.slice(1,3).forEach(item => {
+        const a = document.createElement("div");
+        a.className = "alt";
+        const feasible = feasibilityBadge(s, item.gaps, item.localTB, item.offsiteRes);
+        const extra = (item.gaps.length ? `${item.gaps.length} point(s) de friction` : "OK (selon hypothèses)");
+        const off = (item.strat.offsite && s.offsiteType !== "none") ? fmtTB(item.offsiteRes.totalTB) : "—";
+        a.innerHTML = `
+          <h3>${escapeHtml(item.strat.name.split(" : ")[0])}</h3>
+          <p>${escapeHtml(item.strat.desc)}</p>
+          <div class="row" style="justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <span class="badge ${feasible.kind}"><i></i>${escapeHtml(extra)}</span>
+            <span class="badge"><i></i>Local: <span class="mono">${escapeHtml(fmtTB(item.localTB))}</span></span>
+            <span class="badge"><i></i>Offsite: <span class="mono">${escapeHtml(off)}</span></span>
+          </div>
+        `;
+        ui.alts.appendChild(a);
+      });
+
+      // Report
+      ui.reportBox.textContent = makeReport(s, choice, localTB, offsiteRes, dailyIncrTB, gaps);
+    }
+
+    function applyDefaults(){
+      const d = getDefaults();
+      inputs.dataTB.value = d.dataTB;
+      inputs.changePct.value = d.changePct;
+      inputs.overrideIncrTB.value = d.overrideIncrTB;
+      inputs.diskReduction.value = d.diskReduction;
+      inputs.localAvailTB.value = d.localAvailTB;
+      inputs.securityLevel.value = String(d.securityLevel);
+      inputs.offsiteType.value = d.offsiteType;
+      inputs.offsiteRetentionMonths.value = d.offsiteRetentionMonths;
+      inputs.ltoGen.value = String(d.ltoGen);
+      inputs.ltoCompression.value = d.ltoCompression;
+      inputs.ltoMaxTapes.value = d.ltoMaxTapes;
+      inputs.offsitePayload.value = d.offsitePayload;
+      inputs.retDailyDays.value = d.retDailyDays;
+      inputs.retWeekly.value = d.retWeekly;
+      inputs.retMonthly.value = d.retMonthly;
+      inputs.verifyRate.value = d.verifyRate;
+    }
+
+    function loadSaved(){
+      try{
+        const raw = localStorage.getItem("backuplab_state_v1");
+        if (!raw) return false;
+        const s = JSON.parse(raw);
+        if (!s || typeof s !== "object") return false;
+
+        // Apply with fallback defaults
+        const d = getDefaults();
+        const k = (key)=> (key in s ? s[key] : d[key]);
+
+        inputs.dataTB.value = k("dataTB");
+        inputs.changePct.value = k("changePct");
+        inputs.overrideIncrTB.value = k("overrideIncrTB");
+        inputs.diskReduction.value = k("diskReduction");
+        inputs.localAvailTB.value = k("localAvailTB");
+        inputs.securityLevel.value = String(k("securityLevel"));
+        inputs.offsiteType.value = k("offsiteType");
+        inputs.offsiteRetentionMonths.value = k("offsiteRetentionMonths");
+        inputs.ltoGen.value = String(k("ltoGen"));
+        inputs.ltoCompression.value = k("ltoCompression");
+        inputs.ltoMaxTapes.value = k("ltoMaxTapes");
+        inputs.offsitePayload.value = k("offsitePayload");
+        inputs.retDailyDays.value = k("retDailyDays");
+        inputs.retWeekly.value = k("retWeekly");
+        inputs.retMonthly.value = k("retMonthly");
+        inputs.verifyRate.value = k("verifyRate");
+        return true;
+      }catch(e){
+        return false;
+      }
+    }
+
+    function saveState(){
+      const s = readState();
+      localStorage.setItem("backuplab_state_v1", JSON.stringify(s));
+    }
+
+    // --------- Bind events
+    document.querySelectorAll("input,select").forEach(node=>{
+      node.addEventListener("input", updateUI);
+      node.addEventListener("change", updateUI);
+    });
+
+    el("btnReset").addEventListener("click", ()=>{
+      applyDefaults();
+      updateUI();
+    });
+
+    el("btnSave").addEventListener("click", ()=>{
+      saveState();
+      updateUI();
+    });
+
+    el("btnCopy").addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(ui.reportBox.textContent || "");
+        el("btnCopy").textContent = "Copié ✓";
+        setTimeout(()=> el("btnCopy").textContent = "Copier", 900);
+      }catch(e){
+        el("btnCopy").textContent = "Impossible";
+        setTimeout(()=> el("btnCopy").textContent = "Copier", 900);
+      }
+    });
+
+    // Init
+    (function init(){
+      const ok = loadSaved();
+      if (!ok) applyDefaults();
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
