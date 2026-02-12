@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>backup-audit — QCM bonnes pratiques sauvegarde</title>
+  <title>backup-audit — QCM sauvegarde (audit + plan) </title>
   <style>
     :root{
       --bg:#0b0f17;
@@ -33,29 +33,18 @@
       color:var(--text);
       line-height:1.35;
     }
-    a{color:var(--accent)}
-    .wrap{
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 22px 16px 60px;
-    }
-    header{
-      display:flex;
-      gap:16px;
-      align-items:flex-start;
-      justify-content:space-between;
-      margin-bottom: 14px;
-    }
+    .wrap{max-width: 1220px;margin: 0 auto;padding: 18px 14px 60px}
+    header{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+    @media (max-width: 1100px){header{flex-direction:column}}
     .brand{display:flex;gap:12px;align-items:flex-start}
     .dot{
       width:14px;height:14px;border-radius:999px;
       background: linear-gradient(135deg, var(--accent), var(--ok));
       box-shadow: 0 0 0 6px rgba(138,180,255,.10);
-      margin-top:7px;
-      flex:0 0 auto;
+      margin-top:7px;flex:0 0 auto;
     }
-    h1{margin:0;font-size:20px;letter-spacing:.2px}
-    .subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:720px}
+    h1{margin:0;font-size:19px;letter-spacing:.2px}
+    .subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:760px}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     button{
       border:1px solid var(--line);
@@ -66,23 +55,15 @@
       cursor:pointer;
       transition: transform .05s ease, border-color .15s ease, background .15s ease;
       box-shadow: 0 8px 18px rgba(0,0,0,.18);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 13px;
     }
     button:hover{border-color: rgba(138,180,255,.45)}
     button:active{transform: translateY(1px)}
     button.secondary{background: transparent; box-shadow:none}
-    .grid{
-      display:grid;
-      grid-template-columns: 260px 1.25fr .9fr;
-      gap:14px;
-      align-items:start;
-    }
-    @media (max-width: 1100px){
-      .grid{grid-template-columns: 1fr}
-      header{flex-direction:column}
-      .top-actions{justify-content:flex-start}
-    }
+
+    .grid{display:grid;grid-template-columns: 310px 1.25fr .9fr;gap:14px;align-items:start}
+    @media (max-width: 1150px){.grid{grid-template-columns:1fr}}
 
     .card{
       background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
@@ -91,43 +72,25 @@
       box-shadow: var(--shadow);
       overflow:hidden;
     }
-    .card .hd{
+    .hd{
       padding: 12px 14px;
       border-bottom:1px solid var(--line);
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
+      display:flex;justify-content:space-between;gap:10px;align-items:center;
       background: linear-gradient(180deg, rgba(255,255,255,.03), transparent);
     }
-    .card .hd h2{margin:0;font-size:13px;letter-spacing:.2px}
+    .hd h2{margin:0;font-size:13px;letter-spacing:.2px}
+    .body{padding: 12px 14px}
     .pill{
       display:inline-flex;align-items:center;gap:8px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border:1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-      white-space:nowrap;
+      padding: 6px 10px;border-radius: 999px;border:1px solid var(--line);
+      color: var(--muted);font-size: 12px;white-space:nowrap;
     }
-    .body{padding: 12px 14px}
-    .note{color:var(--muted);font-size:13px;margin: 0 0 10px}
+    .note{color:var(--muted);font-size:13px;margin:0 0 10px}
     .divider{height:1px;background: var(--line);margin: 12px 0}
     .small{font-size:12px;color:var(--muted)}
-    .mutedline{color:var(--faint); font-size:12px}
-    .section-title{
-      margin: 0 0 8px;
-      font-size: 12px;
-      color: var(--muted);
-      letter-spacing:.3px;
-      text-transform: uppercase;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-    }
+    .mutedline{color:var(--faint);font-size:12px}
 
-    /* Nav */
+    /* NAV */
     .navlist{display:flex;flex-direction:column;gap:8px}
     .navbtn{
       width:100%;
@@ -138,19 +101,27 @@
       background: rgba(0,0,0,.14);
       color: var(--text);
       cursor:pointer;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      font-weight:700;
-      font-size:13px;
+      display:flex;justify-content:space-between;align-items:center;gap:10px;
+      font-weight:850;font-size:13px;
     }
     .navbtn:hover{border-color: rgba(138,180,255,.45)}
-    .navhint{font-size:12px;color:var(--muted);font-weight:650}
+    .navmeta{display:flex;align-items:center;gap:8px}
+    .navhint{font-size:12px;color:var(--muted);font-weight:750}
+    .check{
+      width:18px;height:18px;border-radius:7px;
+      border:1px solid rgba(255,255,255,.12);
+      display:grid;place-items:center;
+      background: rgba(255,255,255,.02);
+      flex:0 0 auto;
+    }
+    .check.ok{border-color: rgba(49,208,170,.55); background: rgba(49,208,170,.12)}
+    .check svg{display:none}
+    .check.ok svg{display:block}
+
     .navactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .navactions button{padding:8px 10px;font-size:12px}
 
-    /* Accordion categories */
+    /* Categories */
     .cat{
       border:1px solid var(--line);
       background: rgba(0,0,0,.14);
@@ -160,48 +131,52 @@
     }
     .cat-hd{
       padding: 12px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      cursor:pointer;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
       user-select:none;
       background: linear-gradient(180deg, rgba(255,255,255,.03), transparent);
     }
     .cat-title{display:flex;flex-direction:column;gap:3px}
-    .cat-title .t{font-weight:850;font-size:13px}
+    .cat-title .t{font-weight:950;font-size:13px}
     .cat-title .s{color:var(--muted);font-size:12px}
-    .chev{
-      width:34px;height:34px;border-radius:12px;
-      display:grid;place-items:center;
-      border:1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.03);
-      flex:0 0 auto;
+    .cat-bd{padding: 10px 12px 12px}
+    .bucket{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top: 10px;
+      margin-top: 10px;
     }
-    .chev svg{transition: transform .18s ease}
-    .cat[data-open="true"] .chev svg{transform: rotate(180deg)}
-    .cat-bd{padding: 10px 12px 12px; display:none}
-    .cat[data-open="true"] .cat-bd{display:block}
+    .bucket:first-child{border-top:none;padding-top:0;margin-top:0}
 
-    /* Questions */
+    /* Questions as "cards" that collapse when answered */
     .q{
       border:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.16);
       border-radius: 14px;
       padding: 12px 12px 10px;
       margin: 10px 0;
+      transition: opacity .18s ease, transform .18s ease, max-height .22s ease, margin .22s ease, padding .22s ease;
+      max-height: 560px;
+      overflow:hidden;
+    }
+    .q.done{
+      opacity: .25;
+      transform: translateY(-2px);
+      max-height: 0px;
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      border-width: 0;
     }
     .qhead{
-      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;
-      margin-bottom: 8px;
+      display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom: 8px;
     }
-    .qtitle{margin:0;font-size:13px;color:var(--text);font-weight:800}
+    .qtitle{margin:0;font-size:13px;color:var(--text);font-weight:900}
     .qmeta{color: var(--faint);font-size: 12px;white-space:nowrap;display:flex;align-items:center;gap:8px}
+
     .opts{display:grid;gap:8px;margin: 10px 0 6px}
     label.opt{
       display:flex;gap:10px;align-items:flex-start;
-      padding: 10px 10px;
-      border-radius: 12px;
+      padding: 10px 10px;border-radius: 12px;
       border: 1px solid rgba(255,255,255,.06);
       background: rgba(255,255,255,.02);
       cursor:pointer;
@@ -209,84 +184,85 @@
     }
     label.opt:hover{border-color: rgba(138,180,255,.35);background: rgba(138,180,255,.05)}
     input[type="radio"]{margin-top:2px;accent-color: var(--accent)}
+
     .hint{margin: 8px 0 0;color: var(--faint);font-size: 12px}
-    .subbox{
-      margin: 10px 0 0;
-      padding: 10px 10px;
-      border-radius: 12px;
-      border: 1px dashed rgba(255,255,255,.14);
-      background: rgba(255,255,255,.02);
-      display:none;
+
+    /* A "completed" area to keep answered accessible without scrolling roulette */
+    .completed-list{display:flex;flex-direction:column;gap:8px}
+    details{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.14);
+      border-radius: 14px;
+      overflow:hidden;
     }
-    .subbox.show{display:block}
-    .subbox .row{display:flex;gap:10px;flex-wrap:wrap}
-    .chip{
-      display:inline-flex;gap:8px;align-items:center;
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
-      background: rgba(0,0,0,.16);
+    summary{
+      list-style:none;
       cursor:pointer;
+      padding: 10px 10px;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
       user-select:none;
-      font-size:12px;
-      color: var(--muted);
+      font-weight:900;
+      font-size:13px;
     }
-    .chip input{accent-color: var(--ok)}
-    .chip:hover{border-color: rgba(138,180,255,.40)}
-    .chip b{color:var(--text)}
-    .subhelp{margin-top:8px;color:var(--muted);font-size:12px}
+    summary::-webkit-details-marker{display:none}
+    .sum-meta{display:flex;gap:8px;align-items:center}
+    .badgeMini{
+      font-size:11px;
+      padding: 5px 9px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+      white-space:nowrap;
+    }
+    .ansItem{
+      padding: 10px 10px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .ansItem b{color:var(--text)}
+    .ansItem .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+    .btnlink{
+      padding: 7px 9px;
+      border-radius: 10px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.02);
+      cursor:pointer;
+      color: var(--text);
+      font-weight:850;
+      font-size:12px;
+    }
+    .btnlink:hover{border-color: rgba(138,180,255,.45)}
+    .btnlink.danger{border-color: rgba(255,107,107,.35)}
+    .btnlink.danger:hover{border-color: rgba(255,107,107,.70)}
 
     /* Score side */
-    .kpis{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:10px;
-    }
-    .kpi{
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 10px 10px;
-      background: rgba(0,0,0,.16);
-    }
+    .kpis{display:grid;grid-template-columns: 1fr 1fr;gap:10px}
+    .kpi{border: 1px solid var(--line);border-radius: 14px;padding: 10px 10px;background: rgba(0,0,0,.16)}
     .kpi .t{color: var(--muted);font-size: 12px;margin-bottom: 4px}
-    .kpi .v{font-size: 18px;font-weight: 900;letter-spacing:.2px}
-
-    .bar{
-      height: 10px;border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.06);
-      overflow:hidden;
-      margin-top: 10px;
-    }
-    .bar > div{
-      height:100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--bad), var(--warn), var(--ok));
-      transition: width .25s ease;
-    }
+    .kpi .v{font-size: 18px;font-weight: 1000;letter-spacing:.2px}
+    .bar{height: 10px;border-radius: 999px;background: rgba(255,255,255,.06);border: 1px solid rgba(255,255,255,.06);overflow:hidden;margin-top: 10px}
+    .bar > div{height:100%;width: 0%;background: linear-gradient(90deg, var(--bad), var(--warn), var(--ok));transition: width .25s ease}
     .level{
       display:flex;align-items:center;justify-content:space-between;gap:10px;
       padding: 10px 12px;border-radius: 14px;border: 1px solid var(--line);
       background: rgba(0,0,0,.16); margin-top: 12px;
     }
     .badge{
-      padding: 6px 10px;border-radius: 999px;font-size: 12px;font-weight: 900;
+      padding: 6px 10px;border-radius: 999px;font-size: 12px;font-weight: 1000;
       letter-spacing:.2px;border:1px solid rgba(255,255,255,.12);
     }
     .badge.ok{background: rgba(49,208,170,.15); color: var(--ok)}
     .badge.warn{background: rgba(255,204,102,.15); color: var(--warn)}
     .badge.bad{background: rgba(255,107,107,.15); color: var(--bad)}
-    .rec{
-      padding: 12px 12px;border-radius: 14px;border: 1px solid var(--line);
-      background: rgba(0,0,0,.16); margin-top: 12px;
-    }
+    .rec{padding: 12px 12px;border-radius: 14px;border: 1px solid var(--line);background: rgba(0,0,0,.16); margin-top: 12px}
     .rec h3{margin:0 0 8px;font-size: 13px;letter-spacing:.2px}
     ul{margin:0;padding-left:18px;color:var(--muted);font-size:13px}
     li{margin: 6px 0}
     .tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top: 8px}
     .tag{font-size:11px;color: var(--muted);border: 1px solid rgba(255,255,255,.10);border-radius: 999px;padding: 6px 10px;background: rgba(255,255,255,.02)}
 
-    /* Radar / toile */
+    /* Radar */
     .radar{
       border:1px solid var(--line);
       border-radius: 14px;
@@ -296,7 +272,7 @@
     }
     canvas{max-width:100%;height:auto;display:block}
 
-    /* Tooltip / popup */
+    /* Tooltip popup */
     .info{
       width:18px;height:18px;border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
@@ -305,11 +281,10 @@
       cursor:pointer; flex:0 0 auto;
     }
     .info:hover{border-color: rgba(138,180,255,.45)}
-    .info svg{opacity:.9}
     .tip{
       position: fixed;
       z-index: 1000;
-      max-width: 420px;
+      max-width: 440px;
       padding: 12px 12px;
       border-radius: 14px;
       border:1px solid var(--line);
@@ -318,7 +293,7 @@
       display:none;
     }
     .tip.show{display:block}
-    .tip .tt{font-weight:900;font-size:13px;margin:0 0 6px}
+    .tip .tt{font-weight:1000;font-size:13px;margin:0 0 6px}
     .tip .tx{color:var(--muted);font-size:13px;margin:0}
     .tip .ex{margin-top:10px;border-top:1px solid rgba(255,255,255,.08);padding-top:10px;color:var(--muted);font-size:12px}
     .tip .ex b{color:var(--text)}
@@ -329,14 +304,11 @@
       background: rgba(255,255,255,.02);
       color: var(--text);
       cursor:pointer;
-      font-weight:900;
+      font-weight:1000;
     }
 
     .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
+      position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
       background: rgba(15,22,36,.92);
       border:1px solid var(--line);
       border-radius: 999px;
@@ -344,15 +316,14 @@
       color: var(--text);
       box-shadow: var(--shadow);
       display:none;
-      gap:10px;
-      align-items:center;
+      gap:10px;align-items:center;
       max-width: 92vw;
       z-index: 50;
       font-size: 13px;
     }
     .toast.show{display:flex}
-    .toast .k{color: var(--muted);font-weight:800}
-    .toast .v{font-weight:900}
+    .toast .k{color: var(--muted);font-weight:900}
+    .toast .v{font-weight:1000}
   </style>
 </head>
 
@@ -362,39 +333,54 @@
     <div class="brand">
       <div class="dot" aria-hidden="true"></div>
       <div>
-        <h1>backup-audit — QCM audit & planification de sauvegarde</h1>
+        <h1>backup-audit — QCM (les questions disparaissent quand vous répondez)</h1>
         <p class="subtitle">
-          On évite l’auto-congratulation. Si vous ne pouvez pas le prouver (tests, logs, rapports), considérez que ce n’est pas maîtrisé.
+          Objectif : libérer l’écran au fur et à mesure. Une question répondue se replie dans “Réponses déjà données”.
+          Si vous doutez : prenez l’option la plus défavorable. Sinon le score ment.
         </p>
       </div>
     </div>
     <div class="top-actions">
-      <button id="btnScore" title="Calcule le score et la toile de maîtrise">Calculer</button>
-      <button class="secondary" id="btnExport" title="Copie un compte-rendu JSON dans le presse-papier">Exporter</button>
-      <button class="secondary" id="btnReset" title="Réinitialise toutes les réponses">Réinitialiser</button>
+      <button id="btnScore">Calculer</button>
+      <button class="secondary" id="btnExport">Exporter</button>
+      <button class="secondary" id="btnReset">Réinitialiser</button>
     </div>
   </header>
 
   <div class="grid">
-    <!-- NAV -->
-    <aside class="card" aria-label="Navigation">
+
+    <!-- LEFT -->
+    <aside class="card" aria-label="Navigation & réponses">
       <div class="hd">
-        <h2>Catégories</h2>
+        <h2>Navigation & état</h2>
         <span class="pill"><span id="answered">0</span>/<span id="total">0</span></span>
       </div>
       <div class="body">
         <div class="note">
-          Pour éviter la roulette de la souris : cliquez une catégorie pour sauter, et utilisez “Tout ouvrir/fermer”.
+          Les catégories se cochent automatiquement quand elles sont complètes.
         </div>
+
         <div class="navlist" id="nav"></div>
+
         <div class="navactions">
           <button class="secondary" id="openAll">Tout ouvrir</button>
           <button class="secondary" id="closeAll">Tout fermer</button>
+          <button class="secondary" id="showAllQs" title="Ré-affiche temporairement toutes les questions répondue">Afficher toutes les questions</button>
         </div>
+
+        <div class="divider"></div>
+
+        <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
+          <span>Réponses déjà données</span>
+          <span class="mutedline" id="answeredHint">—</span>
+        </div>
+
+        <div class="completed-list" id="completed"></div>
+
         <div class="divider"></div>
         <div class="small">
-          Les <b>icônes “i”</b> ouvrent une popup (hover + clic) avec explications.
-          Si vous “pensez” appliquer une pratique mais sans preuve : cochez l’option prudente.
+          Cliquez une réponse pour la revoir et la modifier (bouton “Modifier”).
+          Les popups “i” expliquent les notions (3-2-1, immutabilité, etc.).
         </div>
       </div>
     </aside>
@@ -402,26 +388,16 @@
     <!-- MAIN -->
     <main class="card" aria-label="Questionnaire">
       <div class="hd">
-        <h2>Questionnaire structuré</h2>
-        <span class="pill">audit + cible</span>
+        <h2>Questions restantes</h2>
+        <span class="pill">celles-ci disparaissent après réponse</span>
       </div>
-      <div class="body">
-        <p class="note">
-          Deux modes dans le même QCM : <b>audit</b> (ce qui existe vraiment) et <b>cible</b> (ce qui est prévu/designé).
-          Si une réponse dépend d’une personne “qui sait”, c’est fragile.
-        </p>
-        <div id="cats"></div>
-        <div class="divider"></div>
-        <p class="small">
-          Rappel pénible : un “job OK” n’est pas une restauration. Une restauration n’est pas une reprise. Une reprise n’est pas une continuité.
-        </p>
-      </div>
+      <div class="body" id="cats"></div>
     </main>
 
-    <!-- SCORE -->
-    <aside class="card" aria-label="Score et toile de maîtrise">
+    <!-- RIGHT -->
+    <aside class="card" aria-label="Score et toile">
       <div class="hd">
-        <h2>Lecture & toile de maîtrise</h2>
+        <h2>Toile de maîtrise</h2>
         <span class="pill">0 → 100</span>
       </div>
       <div class="body">
@@ -440,27 +416,23 @@
         <div class="level">
           <div>
             <div class="mutedline">Niveau</div>
-            <div class="v" id="levelText" style="font-weight:900">—</div>
+            <div class="v" id="levelText" style="font-weight:1000">—</div>
           </div>
           <div class="badge bad" id="badge">—</div>
         </div>
 
         <div class="radar">
-          <div class="section-title">
-            <span>Toile de maîtrise (par domaine)</span>
-            <span class="mutedline">plus c’est “rond”, mieux c’est</span>
+          <div class="mutedline" id="radarHint" style="margin-bottom:8px;">
+            Répondez puis calculez : les creux = angles morts.
           </div>
-          <canvas id="radar" width="520" height="460" aria-label="Radar chart"></canvas>
-          <div class="mutedline" id="radarHint" style="margin-top:8px;">
-            Répondez puis cliquez “Calculer” pour afficher la toile.
-          </div>
+          <canvas id="radar" width="520" height="460"></canvas>
         </div>
 
         <div class="rec">
           <h3>Ce que ça suggère</h3>
           <ul id="insights">
-            <li>Répondez au questionnaire puis calculez.</li>
-            <li>Ensuite, cherchez ce qui manque : preuves, tests, séparation des pouvoirs, immutabilité.</li>
+            <li>Le score ne prouve pas la sécurité : il montre vos zones faibles.</li>
+            <li>Les “creux” sont souvent là où vous pensez être bon sans preuve.</li>
           </ul>
           <div class="tagrow" id="tags"></div>
         </div>
@@ -469,17 +441,14 @@
           <h3>Priorités (actions)</h3>
           <ul id="priorities"><li>—</li></ul>
         </div>
-
-        <div class="small" style="margin-top:12px;color:var(--faint)">
-          La toile n’est pas un KPI magique. Elle sert à mettre en évidence les creux (souvent là où vous “supposez”).
-        </div>
       </div>
     </aside>
+
   </div>
 </div>
 
 <!-- Tooltip -->
-<div class="tip" id="tip" role="dialog" aria-modal="false" aria-hidden="true">
+<div class="tip" id="tip" role="dialog" aria-hidden="true">
   <button class="close" id="tipClose" title="Fermer">×</button>
   <p class="tt" id="tipTitle">—</p>
   <p class="tx" id="tipText">—</p>
@@ -501,52 +470,7 @@
     }[s]));
   }
 
-  // Glossaire / popups
-  const GLOSSARY = {
-    "rpo-rto": {
-      title: "RPO / RTO",
-      text: "RPO = perte de données acceptable (point de reprise). RTO = durée acceptable d’indisponibilité (temps de reprise).",
-      extra: "<b>Doute utile :</b> vos objectifs sont-ils validés par le métier, ou juste “IT-friendly” ?"
-    },
-    "321": {
-      title: "Règle 3-2-1 (et variantes)",
-      text: "3 copies, 2 supports différents, 1 copie hors site. Objectif : éviter qu’un incident unique détruise tout.",
-      extra: `
-        <b>Variantes courantes :</b><br>
-        • <b>3-2-1-1-0</b> : +1 copie <i>offline/immuable</i>, +0 erreurs de vérification (tests/validation).<br>
-        • <b>4-3-2</b> : 4 copies / 3 supports / 2 hors site (plus strict).<br>
-        • <b>GFS</b> : Grandfather-Father-Son (quotidien/hebdo/mensuel).<br>
-        <b>Doute utile :</b> “hors site” mais même tenant/compte/identité = pas vraiment séparé.
-      `
-    },
-    "immut": {
-      title: "Immutabilité / WORM",
-      text: "WORM/Object Lock : les sauvegardes ne peuvent pas être modifiées/supprimées avant une date. C’est une défense clé contre le ransomware.",
-      extra: "<b>Doute utile :</b> l’exception “admin peut supprimer” annule souvent tout. Séparez les identités et journalisez."
-    },
-    "restore-tests": {
-      title: "Tests de restauration",
-      text: "Un test utile restaure réellement (fichier, VM, base, application) et mesure le temps + la validité fonctionnelle.",
-      extra: "<b>Doute utile :</b> un test technique ne prouve pas la reprise applicative (dépendances, secrets, DNS, certificats…)."
-    },
-    "shared-resp": {
-      title: "Responsabilité partagée (Cloud/SaaS)",
-      text: "Le fournisseur garantit la plateforme, pas votre capacité à restaurer après suppression, corruption, ransomware ou erreur humaine.",
-      extra: "<b>Doute utile :</b> pouvez-vous récupérer une version d’il y a 30/90 jours sans support du fournisseur ?"
-    },
-    "airgap": {
-      title: "Air-gap / Offline",
-      text: "Copie réellement isolée (réseau/identité), difficile à atteindre pour un attaquant. Peut être physique ou logique (fortement séparé).",
-      extra: "<b>Doute utile :</b> si une même identité peut tout accéder, ce n’est pas un air-gap."
-    },
-    "runbook": {
-      title: "Runbook / procédures",
-      text: "Procédure concise, testée, qui guide la restauration/reprise en incident. Doit être accessible même quand le SI va mal.",
-      extra: "<b>Doute utile :</b> si la doc est “dans le wiki interne” inaccessible en panne, elle ne vous aidera pas."
-    }
-  };
-
-  // Axes de la toile (domaines)
+  // Axes de la toile
   const AXES = [
     { key:"Gouvernance", label:"Gouvernance" },
     { key:"Résilience",  label:"Résilience" },
@@ -558,173 +482,38 @@
     { key:"Conformité",  label:"Conformité" },
   ];
 
-  // Catégories / sous-sujets : pour navigation et structure
-  const CATS = [
-    {
-      id:"cat-audit-gouv",
-      title:"Audit — Gouvernance & exigences",
-      subtitle:"objectifs, périmètre, rétention, conformité",
-      questions: [
-        q("a1","RPO/RTO : objectifs chiffrés, documentés, validés ?",6,"rpo-rto","Gouvernance","Audit","Sans objectifs, vous ne savez pas si c’est suffisant.", [
-          opt("Oui, validés + documentés + revus",6,["Gouvernance"]),
-          opt("Partiel (approx / non validé)",3,["Gouvernance"],"Formaliser RPO/RTO avec le métier et les rendre traçables."),
-          opt("Non / inconnu",0,["Gouvernance"],"Définir RPO/RTO : sans ça, vous pilotez à l’aveugle.")
-        ]),
-        q("a2","Inventaire & classification : savez-vous ce qui est critique et pourquoi ?",6,null,"Couverture","Audit","Sans inventaire, vous sauvegardez souvent “ce qui est visible”.", [
-          opt("Oui (inventaire, criticité, owners)",6,["Couverture"]),
-          opt("Partiel",3,["Couverture"],"Faire un inventaire + classification (données, apps, configs, secrets, SaaS)."),
-          opt("Non",0,["Couverture"],"Dresser l’inventaire et la criticité : sinon la sauvegarde couvre mal.")
-        ]),
-        q("a3","Rétention : règles définies (technique + légal) et maîtrisées ?",6,null,"Conformité","Audit","Trop court = pertes. Trop long = risques + coûts.", [
-          opt("Oui (politiques par type + revue)",6,["Conformité","Gouvernance"]),
-          opt("Partiel (par défaut)",3,["Conformité"],"Définir rétention par type de données + contraintes légales."),
-          opt("Non / inconnu",0,["Conformité"],"Définir une rétention : sinon c’est arbitraire.")
-        ]),
-        q("a4","Documentation : existe-t-il un runbook de restauration/reprise ?",6,"runbook","Gouvernance","Audit","Si personne ne sait restaurer sous stress, vous perdez du temps.", [
-          opt("Oui, maintenu et accessible",6,["Gouvernance"]),
-          opt("Partiel",3,["Gouvernance"],"Créer un runbook court, testé, accessible même en incident."),
-          opt("Non",0,["Gouvernance"],"Écrire les procédures critiques (restauration, accès, clés, priorités).")
-        ]),
-      ]
+  // Glossaire
+  const GLOSSARY = {
+    "321": {
+      title: "Règle 3-2-1 et variantes (scorées)",
+      text: "La base 3-2-1 : 3 copies, 2 supports, 1 hors site. Les variantes ajoutent de la résistance au ransomware et aux erreurs.",
+      extra: `
+        <b>Variante(s) :</b><br>
+        • <b>3-2-1</b> : base.<br>
+        • <b>3-2-1-1</b> : +1 copie <i>offline ou immuable</i> (fort contre ransomware).<br>
+        • <b>3-2-1-1-0</b> : +0 erreur via <i>vérifs/tests</i> (restauration prouvée).<br>
+        • <b>4-3-2</b> : plus strict (souvent pour environnements sensibles).<br>
+        <b>Doute utile :</b> “hors site” mais même tenant/compte/identité = pas une vraie séparation.
+      `
     },
-    {
-      id:"cat-audit-res",
-      title:"Audit — Résilience & architecture",
-      subtitle:"3-2-1, hors site, air-gap, dépendances",
-      questions: [
-        q("a5","Stratégie 3-2-1 : réellement appliquée et prouvée ?",10,"321","Résilience","Audit","Si tout est dans le même périmètre, un incident peut tout emporter.", [
-          opt("Oui, stratégie prouvée",10,["Résilience"],null,{ enable321Variants:true }),
-          opt("Partiel (hors site mais même compte/fournisseur/identité)",5,["Résilience"],"Assurer une séparation réelle : comptes, identités, support, site."),
-          opt("Non",0,["Résilience"],"Mettre en place 3-2-1 (idéalement 3-2-1-1-0).")
-        ]),
-        q("a6","Hors site : la copie externe est-elle réellement indépendante (tenant, compte, identités) ?",8,null,"Résilience","Audit","“Hors site” qui dépend des mêmes droits = fragile.", [
-          opt("Oui, indépendance forte (compte/tenant séparé)",8,["Résilience"]),
-          opt("Partiel",4,["Résilience"],"Séparer comptes/tenants/clefs/identités pour réduire le blast radius."),
-          opt("Non / inconnu",0,["Résilience"],"Créer une copie hors site réellement indépendante.")
-        ]),
-        q("a7","Air-gap / offline : avez-vous au moins une copie réellement isolée ?",8,"airgap","Résilience","Audit","Une copie isolée casse l’effet domino d’un ransomware.", [
-          opt("Oui (offline/isolée) + procédure",8,["Résilience","Sécurité"]),
-          opt("Partiel (isolée mais accessible via mêmes identités)",4,["Résilience"],"Mettre une vraie isolation (identités, réseau, procédure)."),
-          opt("Non",0,["Résilience"],"Ajouter une copie offline/air-gap ou immuable.")
-        ]),
-        q("a8","Dépendances : sauvegardez-vous aussi les configs, IaC, DNS, certificats, secrets ?",8,null,"Couverture","Audit","On restaure des VMs… puis on bloque sur le reste.", [
-          opt("Oui (configs + secrets + infra)",8,["Couverture"]),
-          opt("Partiel",4,["Couverture"],"Sauvegarder et versionner configs/IaC/secrets/certificats."),
-          opt("Non / inconnu",0,["Couverture"],"Inclure dépendances et secrets : sinon restauration incomplète.")
-        ]),
-      ]
+    "immut": {
+      title: "Immutabilité / WORM",
+      text: "WORM/Object Lock : impossibilité de modifier/supprimer avant une date. Essentiel contre ransomware.",
+      extra: "<b>Doute utile :</b> si l’admin backup peut désactiver/supprimer facilement, la protection est fragile."
     },
-    {
-      id:"cat-audit-sec",
-      title:"Audit — Sécurité des sauvegardes",
-      subtitle:"immutabilité, chiffrement, séparation des pouvoirs",
-      questions: [
-        q("a9","Immutabilité : vos backups sont-ils protégés contre suppression/chiffrement ?",10,"immut","Sécurité","Audit","Si un attaquant peut détruire les backups, vous n’avez pas de plan B.", [
-          opt("Oui (WORM/Object Lock) + vérifié",10,["Sécurité"]),
-          opt("Partiel (MFA mais pas d’immutabilité, ou inverse)",5,["Sécurité"],"Ajouter immutabilité + séparation des identités + journaux."),
-          opt("Non / inconnu",0,["Sécurité"],"Mettre des sauvegardes immuables et isolées : priorité ransomware.")
-        ]),
-        q("a10","Séparation des rôles : opérateurs ≠ admins (least privilege) ?",8,null,"Sécurité","Audit","Un compte admin unique = point de défaillance unique.", [
-          opt("Oui (RBAC, MFA, journaux)",8,["Sécurité"]),
-          opt("Partiel",4,["Sécurité"],"Séparer rôles/permissions et mettre MFA + traces."),
-          opt("Non",0,["Sécurité"],"Mettre séparation des pouvoirs : réduire l’impact d’un compte compromis.")
-        ]),
-        q("a11","Chiffrement : en transit + au repos + gestion des clés claire ?",6,null,"Sécurité","Audit","Vos backups contiennent souvent le pire scénario de fuite.", [
-          opt("Oui (transit + repos + clés maîtrisées)",6,["Sécurité","Conformité"]),
-          opt("Partiel",3,["Sécurité"],"Assurer transit+repos et clarifier la gestion/rotation/accès aux clés."),
-          opt("Non / inconnu",0,["Sécurité"],"Mettre le chiffrement : sinon vous ajoutez un risque.")
-        ]),
-        q("a12","Journalisation : actions admin sur le backup tracées et revues ?",6,null,"Exploitation","Audit","Sans logs fiables, impossible de prouver ou d’enquêter.", [
-          opt("Oui (logs centralisés + revue)",6,["Exploitation","Sécurité"]),
-          opt("Partiel",3,["Exploitation"],"Centraliser les logs et définir une revue/alerte sur actions sensibles."),
-          opt("Non",0,["Exploitation"],"Activer la journalisation et la conserver hors de portée des admins backup.")
-        ]),
-      ]
+    "domain": {
+      title: "Backup server dans le domaine",
+      text: "Si le serveur de backup est joint au domaine, un compromission AD peut mener à la destruction des sauvegardes.",
+      extra: "<b>Doute utile :</b> l’attaquant vise AD puis backup. Votre design doit casser cette chaîne."
     },
-    {
-      id:"cat-audit-rest",
-      title:"Audit — Restauration & reprise",
-      subtitle:"tests réels, runbooks, priorité de reprise",
-      questions: [
-        q("a13","Tests de restauration : à quelle fréquence restaurez-vous vraiment ?",10,"restore-tests","Restauration","Audit","Un backup non restaurable = inutile.", [
-          opt("Régulier (mensuel/trimestriel) + preuves",10,["Restauration"]),
-          opt("Occasionnel",5,["Restauration"],"Planifier des restaurations régulières + conserver preuves (temps, succès)."),
-          opt("Jamais / très rare",0,["Restauration"],"Mettre en place des tests réels : sinon vous découvrirez trop tard.")
-        ]),
-        q("a14","Reprise applicative : testez-vous la restauration jusqu’au service (dépendances, auth, données) ?",8,null,"Restauration","Audit","Restaurer une base ne prouve pas que l’appli repart.", [
-          opt("Oui, scénarios bout-en-bout",8,["Restauration"]),
-          opt("Partiel (technique seulement)",4,["Restauration"],"Élargir les tests : dépendances, authent, intégrations, secrets."),
-          opt("Non",0,["Restauration"],"Tester la reprise applicative, pas juste la restauration technique.")
-        ]),
-        q("a15","Priorités de reprise : ordre défini (qui/quoi en premier) ?",6,null,"Gouvernance","Audit","En incident, tout devient urgent. Il faut un ordre.", [
-          opt("Oui (runbook + owners + dépendances)",6,["Gouvernance","Restauration"]),
-          opt("Partiel",3,["Gouvernance"],"Définir l’ordre de reprise et les dépendances."),
-          opt("Non",0,["Gouvernance"],"Construire un runbook de reprise avec priorités.")
-        ]),
-      ]
-    },
-    {
-      id:"cat-audit-ops",
-      title:"Audit — Exploitation & qualité",
-      subtitle:"monitoring, dérives, capacité, fenêtres",
-      questions: [
-        q("a16","Supervision : alertes fiables sur échec/dérive (et traitement) ?",8,null,"Exploitation","Audit","Une sauvegarde qui échoue en silence finit par vous trahir.", [
-          opt("Oui (alerting + escalade + suivi)",8,["Exploitation"]),
-          opt("Partiel (bruit/peu suivi)",4,["Exploitation"],"Fiabiliser alertes et instaurer une routine de traitement."),
-          opt("Non",0,["Exploitation"],"Mettre alerting + routine : sinon ça se dégrade.")
-        ]),
-        q("a17","Capacité : surveillez-vous l’espace, la croissance et les fenêtres de backup ?",6,null,"Exploitation","Audit","Quand la capacité manque, on coupe la rétention. Mauvaise idée.", [
-          opt("Oui (seuils + prévisions)",6,["Exploitation","Design"]),
-          opt("Partiel",3,["Exploitation"],"Modéliser croissance et ajouter des alertes de capacité."),
-          opt("Non",0,["Exploitation"],"Surveiller capacité et fenêtres : sinon vous perdez la maîtrise.")
-        ]),
-        q("a18","Restauration “en urgence” : délais réellement tenables avec bande passante/IO ?",6,null,"Design","Audit","Restaurer 20 To via un lien saturé, c’est un fantasme.", [
-          opt("Oui, dimensionné et testé",6,["Design","Restauration"]),
-          opt("Partiel",3,["Design"],"Valider les temps de restauration avec contraintes réelles (réseau/IO)."),
-          opt("Non / inconnu",0,["Design"],"Évaluer les temps de restauration réels et ajuster l’architecture.")
-        ]),
-      ]
-    },
-    {
-      id:"cat-plan",
-      title:"Cible — Design & planification",
-      subtitle:"choix d’architecture, SaaS, coûts, exigences",
-      questions: [
-        q("b1","Architecture cible : modèle clair (on-prem/cloud/hybride) + RACI ?",6,null,"Design","Plan","“On verra” finit souvent en bricolage.", [
-          opt("Oui (architecture + responsabilités)",6,["Design","Gouvernance"]),
-          opt("Partiel",3,["Design"],"Formaliser architecture + RACI (qui restaure, qui valide)."),
-          opt("Non",0,["Design"],"Définir l’architecture cible, sinon la solution arrive par hasard.")
-        ]),
-        q("b2","Immutabilité prévue : intégrée au design (durées, exceptions, comptes) ?",10,"immut","Sécurité","Plan","Sans immutabilité, la sauvegarde peut être détruite.", [
-          opt("Oui",10,["Sécurité","Design"]),
-          opt("En discussion",5,["Sécurité"],"Trancher et intégrer l’immutabilité au design (durées, exceptions)."),
-          opt("Non",0,["Sécurité"],"Ajouter immutabilité : multiplicateur de résilience.")
-        ]),
-        q("b3","Tests futurs : calendrier + scénarios + responsable + preuves ?",8,"restore-tests","Restauration","Plan","Un test sans responsable saute dès que ça chauffe.", [
-          opt("Oui",8,["Restauration","Gouvernance"]),
-          opt("Partiel",4,["Restauration"],"Définir plan de tests (scénarios, critères, responsabilité)."),
-          opt("Non",0,["Restauration"],"Planifier les tests dès le design, pas après l’incident.")
-        ]),
-        q("b4","SaaS/Cloud : responsabilité partagée prise en compte ?",8,"shared-resp","Couverture","Plan","Disponibilité ≠ récupération de données.", [
-          opt("Oui (SaaS couvert par export/backup tiers)",8,["Couverture","Design"]),
-          opt("Partiel",4,["Couverture"],"Clarifier ce que le fournisseur couvre vs ce que vous devez sauvegarder."),
-          opt("Non / inconnu",0,["Couverture"],"Inclure SaaS/Cloud dans le périmètre : sinon angle mort.")
-        ]),
-        q("b5","Coûts/capacité : volume, croissance, rétention, egress modélisés ?",6,null,"Design","Plan","Sans modèle, vous découvrirez le coût en prod.", [
-          opt("Oui",6,["Design"]),
-          opt("Partiel",3,["Design"],"Modéliser volume/croissance/rétention/egress + seuils d’alerte."),
-          opt("Non",0,["Design"],"Évaluer capacité et coûts : une solution non soutenable sera contournée.")
-        ]),
-        q("b6","Exigences de conformité : localisation, accès, traçabilité, durée, droit à l’effacement ?",6,null,"Conformité","Plan","La sauvegarde peut contredire vos obligations si mal pensée.", [
-          opt("Oui",6,["Conformité","Gouvernance"]),
-          opt("Partiel",3,["Conformité"],"Aligner rétention/accès/localisation avec exigences légales et internes."),
-          opt("Non",0,["Conformité"],"Intégrer conformité au design : sinon vous paierez en urgence.")
-        ]),
-      ]
+    "av": {
+      title: "Antivirus/EDR sur serveur de backup",
+      text: "Un AV/EDR mal configuré peut casser les jobs… mais l’absence totale peut rendre le serveur de backup trivial à compromettre.",
+      extra: "<b>Doute utile :</b> l’objectif est un contrôle adapté (whitelists, monitoring), pas “installer un agent et prier”."
     }
-  ];
+  };
 
-  // Helpers to build questions/options
+  // Helpers
   function opt(label, score, tags=[], priority=null, extra=null){
     return { label, score, tags, priority, extra };
   }
@@ -732,16 +521,153 @@
     return { id, title, weight, explainId, axisKey, mode, hint, options };
   }
 
-  // 3-2-1 variants: shown when user selects "Oui" on a5
+  // 3-2-1 variants with score add-ons (applied only if base question = "Oui")
+  // Add-on is capped so that total doesn't exceed the question weight.
   const VARIANTS_321 = [
-    { key:"321", label:"3-2-1", desc:"3 copies / 2 supports / 1 hors site" },
-    { key:"321-1-0", label:"3-2-1-1-0", desc:"+1 offline/immuable +0 erreurs (vérifs)" },
-    { key:"432", label:"4-3-2", desc:"4 copies / 3 supports / 2 hors site" },
-    { key:"gfs", label:"GFS", desc:"quotidien/hebdo/mensuel" }
+    { key:"321",       label:"3-2-1",         desc:"base", add: 0 },
+    { key:"321-1",     label:"3-2-1-1",       desc:"+1 offline/immuable", add: 2 },
+    { key:"321-1-0",   label:"3-2-1-1-0",     desc:"+1 offline/immuable +0 erreur (vérifs)", add: 4 },
+    { key:"432",       label:"4-3-2",         desc:"plus strict (copies/supports/hors site)", add: 2 },
+    { key:"gfs",       label:"GFS",           desc:"quotidien/hebdo/mensuel (rétention)", add: 1 }
   ];
 
+  // Structure par catégories (avec questions "cassantes" ajoutées)
+  const CATS = [
+    {
+      id:"cat-audit-gouv",
+      title:"Audit — Gouvernance & exigences",
+      subtitle:"objectifs, périmètre, rétention, conformité",
+      questions: [
+        q("a1","RPO/RTO : objectifs chiffrés, documentés, validés ?",6,null,"Gouvernance","Audit","Sans objectifs, vous ne savez pas si c’est suffisant.", [
+          opt("Oui, validés + documentés + revus",6,["Gouvernance"]),
+          opt("Partiel (approx / non validé)",3,["Gouvernance"],"Formaliser RPO/RTO avec le métier et les rendre traçables."),
+          opt("Non / inconnu",0,["Gouvernance"],"Définir RPO/RTO : sans ça, vous pilotez à l’aveugle.")
+        ]),
+        q("a2","Inventaire & criticité : savez-vous ce qui est critique et qui en est propriétaire ?",6,null,"Couverture","Audit","Sans inventaire, vous sauvegardez souvent “ce qui est visible”.", [
+          opt("Oui (inventaire, criticité, owners)",6,["Couverture"]),
+          opt("Partiel",3,["Couverture"],"Faire inventaire + classification + owners (données, apps, secrets, SaaS)."),
+          opt("Non",0,["Couverture"],"Dresser inventaire/criticité : sinon la sauvegarde couvrira mal.")
+        ]),
+        q("a3","Rétention : règles définies (technique + légal) et maîtrisées ?",6,null,"Conformité","Audit","Trop court = pertes. Trop long = risques + coûts.", [
+          opt("Oui (politiques par type + revue)",6,["Conformité","Gouvernance"]),
+          opt("Partiel (par défaut)",3,["Conformité"],"Définir rétention par type de données + contraintes légales."),
+          opt("Non / inconnu",0,["Conformité"],"Définir une rétention : sinon c’est arbitraire.")
+        ]),
+      ]
+    },
+    {
+      id:"cat-audit-res",
+      title:"Audit — Résilience & architecture",
+      subtitle:"3-2-1 scoré, hors site, offline/air-gap",
+      questions: [
+        q("a4","Stratégie 3-2-1 : laquelle appliquez-vous réellement ?",12,"321","Résilience","Audit","Si tout est dans le même périmètre, un incident peut tout emporter.", [
+          // Score base intentionally not max: variants will upgrade
+          opt("Oui, on applique une stratégie (je peux préciser laquelle)",8,["Résilience"],null,{ show321Variants:true }),
+          opt("Partiel (hors site mais séparation discutable)",4,["Résilience"],"Assurer séparation réelle : comptes/tenants, identités, support, site."),
+          opt("Non",0,["Résilience"],"Mettre 3-2-1 (idéalement 3-2-1-1-0) avant de vous rassurer.")
+        ]),
+        q("a5","Hors site : la copie externe est-elle indépendante (tenant/compte/identités) ?",8,null,"Résilience","Audit","“Hors site” mais mêmes droits = pas une vraie séparation.", [
+          opt("Oui (compte/tenant séparé + accès limité)",8,["Résilience"]),
+          opt("Partiel",4,["Résilience"],"Séparer comptes/tenants/clefs/identités pour réduire le blast radius."),
+          opt("Non / inconnu",0,["Résilience"],"Créer une copie hors site réellement indépendante.")
+        ]),
+        q("a6","Copie offline/air-gap : avez-vous une copie difficilement atteignable en cas de compromission ?",8,null,"Résilience","Audit","Sans copie isolée, vous dépendez d’un seul scénario.", [
+          opt("Oui (offline/isolée) + procédure",8,["Résilience","Sécurité"]),
+          opt("Partiel (isolée mais accessible via mêmes identités)",4,["Résilience"],"Mettre une vraie isolation (identités, réseau, procédure)."),
+          opt("Non",0,["Résilience"],"Ajouter une copie offline/air-gap ou immuable.")
+        ]),
+      ]
+    },
+    {
+      id:"cat-audit-sec",
+      title:"Audit — Sécurité (questions cassantes)",
+      subtitle:"immutabilité, AD, AV/EDR, séparation des pouvoirs",
+      questions: [
+        q("a7","Immutabilité/WORM : vos sauvegardes sont-elles protégées contre suppression/chiffrement ?",10,"immut","Sécurité","Audit","Si un attaquant peut détruire les backups, vous n’avez pas de plan B.", [
+          opt("Oui (WORM/Object Lock) + vérifié",10,["Sécurité"]),
+          opt("Partiel",5,["Sécurité"],"Ajouter immutabilité + séparation des identités + journaux."),
+          opt("Non / inconnu",0,["Sécurité"],"Mettre des sauvegardes immuables et isolées : priorité ransomware.")
+        ]),
+        // Cassante #1
+        q("a8","Cassant : votre serveur de backup est-il joint au domaine (AD) ?",10,"domain","Sécurité","Audit","Si oui, vous augmentez fortement le risque d’effet domino AD → backup.", [
+          opt("Non, serveur de backup hors domaine + identités dédiées",10,["Sécurité","Résilience"]),
+          opt("Partiel (joint mais durci / comptes séparés)",4,["Sécurité"],"Sortir le serveur de backup du domaine ou isoler fortement (identités, réseau, MFA, bastion)."),
+          opt("Oui, joint au domaine (classique)",0,["Sécurité"],"Priorité : casser la chaîne AD→backup (hors domaine / isolation / comptes dédiés).")
+        ]),
+        // Cassante #2
+        q("a9","Cassant : le dépôt backup (repo) est-il accessible en écriture avec des identifiants “courants” (admins/domain admin) ?",10,null,"Sécurité","Audit","Si oui : en compromission, le repo est une cible facile.", [
+          opt("Non (accès restreint, comptes dédiés, MFA, traces)",10,["Sécurité"]),
+          opt("Partiel",4,["Sécurité"],"Réduire le blast radius : comptes dédiés, séparation, verrouillage, journaux hors de portée."),
+          opt("Oui / inconnu",0,["Sécurité"],"Retirer l’accès en écriture aux identités courantes : sinon le repo tombe.")
+        ]),
+        // Cassante #3 (AV/EDR)
+        q("a10","Cassant : AV/EDR sur le serveur de backup, est-ce maîtrisé (exceptions, surveillance) ?",8,"av","Exploitation","Audit","Le piège : pas d’agent = compromission facile. Agent mal réglé = backups cassés.", [
+          opt("Oui (EDR/AV + exceptions + supervision) et ça n’impacte pas les jobs",8,["Exploitation","Sécurité"]),
+          opt("Partiel (agent présent mais ‘au pif’ / incidents)",4,["Exploitation"],"Configurer whitelists/exclusions, monitorer l’impact, valider avec éditeur backup."),
+          opt("Non",0,["Exploitation"],"Mettre un contrôle adapté (au minimum durcissement + monitoring), sinon la compromission est facile.")
+        ]),
+      ]
+    },
+    {
+      id:"cat-audit-rest",
+      title:"Audit — Restauration & preuves",
+      subtitle:"tests réels, reprise applicative, runbooks",
+      questions: [
+        q("a11","Tests de restauration : vous restaurez réellement, avec preuves et temps mesuré ?",10,null,"Restauration","Audit","Un job OK n’est pas une restauration.", [
+          opt("Oui (mensuel/trimestriel) + preuves",10,["Restauration"]),
+          opt("Occasionnel",5,["Restauration"],"Planifier des restaurations régulières + conserver preuves (temps, succès)."),
+          opt("Jamais / très rare",0,["Restauration"],"Faire des tests réels : sinon vous découvrirez trop tard.")
+        ]),
+        q("a12","Reprise applicative : test bout-en-bout (dépendances, auth, données) ?",8,null,"Restauration","Audit","Restaurer une base ne prouve pas que le service repart.", [
+          opt("Oui, scénarios bout-en-bout",8,["Restauration"]),
+          opt("Partiel (technique seulement)",4,["Restauration"],"Élargir les tests : dépendances, intégrations, secrets, DNS, certificats."),
+          opt("Non",0,["Restauration"],"Tester la reprise applicative, pas juste la restauration technique.")
+        ]),
+      ]
+    },
+    {
+      id:"cat-audit-ops",
+      title:"Audit — Exploitation",
+      subtitle:"alerting, dérives, capacité, fenêtres",
+      questions: [
+        q("a13","Supervision : alertes fiables sur échecs/dérives + traitement ?",8,null,"Exploitation","Audit","Une sauvegarde non surveillée se dégrade.", [
+          opt("Oui (alerting + escalade + suivi)",8,["Exploitation"]),
+          opt("Partiel (bruit/peu suivi)",4,["Exploitation"],"Fiabiliser alertes et instaurer une routine de traitement."),
+          opt("Non",0,["Exploitation"],"Mettre alerting + routine : sinon ça va finir par casser.")
+        ]),
+        q("a14","Capacité : croissance et fenêtres de backup modélisées + seuils ?",6,null,"Design","Audit","Quand la capacité manque, on coupe la rétention (mauvais réflexe).", [
+          opt("Oui (seuils + prévisions)",6,["Design","Exploitation"]),
+          opt("Partiel",3,["Design"],"Modéliser croissance et ajouter des alertes de capacité."),
+          opt("Non",0,["Design"],"Surveiller capacité/fenêtres : sinon perte de maîtrise.")
+        ]),
+      ]
+    },
+    {
+      id:"cat-plan",
+      title:"Cible — Design / planification",
+      subtitle:"architecture, SaaS, tests prévus, conformité",
+      questions: [
+        q("b1","Architecture cible : modèle clair (on-prem/cloud/hybride) + RACI ?",6,null,"Design","Plan","Sans design, vous aurez du bricolage.", [
+          opt("Oui (architecture + responsabilités)",6,["Design","Gouvernance"]),
+          opt("Partiel",3,["Design"],"Formaliser architecture + RACI (qui restaure, qui valide)."),
+          opt("Non",0,["Design"],"Définir l’architecture cible, sinon la solution arrive par hasard.")
+        ]),
+        q("b2","Immutabilité prévue (durées, exceptions, comptes séparés) ?",8,"immut","Sécurité","Plan","Si ce n’est pas dans le design, ça n’arrivera pas.", [
+          opt("Oui",8,["Sécurité","Design"]),
+          opt("En discussion",4,["Sécurité"],"Trancher et intégrer l’immutabilité au design."),
+          opt("Non",0,["Sécurité"],"Ajouter immutabilité au design : sinon vous serez vulnérable.")
+        ]),
+        q("b3","Plan de tests futur : calendrier + scénarios + preuves + responsable ?",6,null,"Restauration","Plan","Un test sans responsable saute en premier.", [
+          opt("Oui",6,["Restauration","Gouvernance"]),
+          opt("Partiel",3,["Restauration"],"Définir plan de tests (scénarios, critères, ownership)."),
+          opt("Non",0,["Restauration"],"Planifier les tests dès le design.")
+        ]),
+      ]
+    },
+  ];
+
+  // --- Rendering ---
   function render(){
-    // Nav
     const nav = $("#nav");
     nav.innerHTML = "";
     for (const cat of CATS){
@@ -750,26 +676,29 @@
       btn.type = "button";
       btn.innerHTML = `
         <span>${escapeHtml(cat.title)}</span>
-        <span class="navhint" id="navhint-${cat.id}">—</span>
+        <span class="navmeta">
+          <span class="navhint" id="navhint-${cat.id}">—</span>
+          <span class="check" id="navcheck-${cat.id}" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </span>
       `;
       btn.addEventListener("click", () => {
         const el = document.getElementById(cat.id);
         if (!el) return;
         el.scrollIntoView({behavior:"smooth", block:"start"});
-        // open it
-        setOpen(cat.id, true);
       });
       nav.appendChild(btn);
     }
 
-    // Categories & questions
     const cats = $("#cats");
     cats.innerHTML = "";
     for (const cat of CATS){
-      const box = document.createElement("section");
-      box.className = "cat";
-      box.id = cat.id;
-      box.dataset.open = (cat.id === "cat-audit-gouv") ? "true" : "false";
+      const sec = document.createElement("section");
+      sec.className = "cat";
+      sec.id = cat.id;
 
       const hd = document.createElement("div");
       hd.className = "cat-hd";
@@ -778,48 +707,37 @@
           <div class="t">${escapeHtml(cat.title)}</div>
           <div class="s">${escapeHtml(cat.subtitle)}</div>
         </div>
-        <div class="chev" aria-hidden="true">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </div>
+        <span class="pill" id="pill-${cat.id}">0/${cat.questions.length}</span>
       `;
-      hd.addEventListener("click", () => setOpen(cat.id, box.dataset.open !== "true"));
-      box.appendChild(hd);
+      sec.appendChild(hd);
 
       const bd = document.createElement("div");
       bd.className = "cat-bd";
 
       for (const qu of cat.questions){
-        bd.appendChild(renderQuestion(qu));
+        bd.appendChild(renderQuestion(qu, cat.id));
       }
 
-      box.appendChild(bd);
-      cats.appendChild(box);
+      sec.appendChild(bd);
+      cats.appendChild(sec);
     }
 
-    // Total questions
     const allQ = CATS.flatMap(c => c.questions);
     $("#total").textContent = allQ.length;
 
-    document.addEventListener("change", updateAnsweredCount);
-    updateAnsweredCount();
-    updateNavHints();
-    drawRadar(null); // placeholder
+    document.addEventListener("change", onAnyChange);
+    onAnyChange();
+    drawRadar(null);
   }
 
-  function setOpen(catId, open){
-    const el = document.getElementById(catId);
-    if (!el) return;
-    el.dataset.open = open ? "true" : "false";
-  }
-
-  function renderQuestion(qu){
+  function renderQuestion(qu, catId){
     const root = document.createElement("div");
     root.className = "q";
+    root.id = `q-${qu.id}`;
     root.dataset.qid = qu.id;
     root.dataset.weight = qu.weight;
     root.dataset.axis = qu.axisKey;
+    root.dataset.cat = catId;
 
     const info = qu.explainId ? `
       <span class="info" tabindex="0" role="button" aria-label="Explication" data-tip="${escapeHtml(qu.explainId)}">
@@ -851,11 +769,12 @@
       lbl.setAttribute("for", id);
       lbl.innerHTML = `
         <input type="radio" name="${escapeHtml(qu.id)}" id="${escapeHtml(id)}"
-          data-score="${op.score}" data-tags="${(op.tags||[]).join(",")}"
+          data-score="${op.score}"
+          data-tags="${(op.tags||[]).join(",")}"
           data-priority="${escapeHtml(op.priority || "")}"
           data-extra="${escapeHtml(JSON.stringify(op.extra || null))}">
         <div>
-          <div style="font-weight:750">${escapeHtml(op.label)}</div>
+          <div style="font-weight:850">${escapeHtml(op.label)}</div>
           <div class="mutedline">Score : ${op.score}/${qu.weight}</div>
         </div>
       `;
@@ -869,41 +788,57 @@
     hint.textContent = qu.hint;
     root.appendChild(hint);
 
-    // Special subbox: 3-2-1 variants (only for a5 yes option)
-    if (qu.id === "a5"){
+    // 3-2-1 variants picker (scored) — only for a4
+    if (qu.id === "a4"){
       const sub = document.createElement("div");
-      sub.className = "subbox";
+      sub.className = "bucket";
       sub.id = "sub_321";
+      sub.style.display = "none";
       sub.innerHTML = `
-        <div style="font-weight:850;font-size:12px;margin-bottom:8px;">Variante(s) cochée(s) (informatif)</div>
-        <div class="row" id="chips_321"></div>
-        <div class="subhelp">Ça n’ajoute pas de points “magiques”. Ça sert à être précis : quelle variante est réellement en place ?</div>
+        <div style="font-weight:1000;font-size:12px;margin-bottom:8px;">
+          Variante(s) appliquée(s) (impacte le score de cette question)
+        </div>
+        <div class="small" style="margin-bottom:8px;color:var(--faint)">
+          Choisissez ce qui est réellement en place. Si vous cochez <b>3-2-1-1-0</b>, vous devriez avoir des preuves de vérification/restauration.
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px" id="vlist"></div>
       `;
+      const list = sub.querySelector("#vlist");
+      for (const v of VARIANTS_321){
+        const row = document.createElement("label");
+        row.className = "opt";
+        row.style.cursor = "pointer";
+        row.innerHTML = `
+          <input type="radio" name="v321" data-add="${v.add}" data-key="${escapeHtml(v.key)}">
+          <div>
+            <div style="font-weight:900">${escapeHtml(v.label)} <span class="mutedline">(+${v.add} pts)</span></div>
+            <div class="mutedline">${escapeHtml(v.desc)}</div>
+          </div>
+        `;
+        list.appendChild(row);
+      }
       root.appendChild(sub);
 
-      const row = sub.querySelector("#chips_321");
-      for (const v of VARIANTS_321){
-        const chip = document.createElement("label");
-        chip.className = "chip";
-        chip.innerHTML = `
-          <input type="checkbox" data-variant="${escapeHtml(v.key)}" />
-          <span><b>${escapeHtml(v.label)}</b> — ${escapeHtml(v.desc)}</span>
-        `;
-        row.appendChild(chip);
-      }
-
-      // show/hide based on radio selection
-      root.addEventListener("change", (e) => {
-        const chosen = document.querySelector(`input[name="a5"]:checked`);
-        const show = chosen && Number(chosen.dataset.score || 0) >= 10; // only if "Oui"
-        sub.classList.toggle("show", !!show);
+      // Toggle show when base answer is "Oui"
+      root.addEventListener("change", () => {
+        const chosen = document.querySelector(`input[name="a4"]:checked`);
+        const show = chosen && Number(chosen.dataset.score||0) >= 8;
+        sub.style.display = show ? "block" : "none";
         if (!show){
-          sub.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+          $$('input[name="v321"]').forEach(x => x.checked = false);
         }
       });
     }
 
     return root;
+  }
+
+  // --- Dynamic regroup: answered questions collapse & appear in left "completed" ---
+  function onAnyChange(){
+    updateAnsweredCount();
+    updateCategoryProgress();
+    rebuildCompletedPanel();
+    applyCollapseAnswered();
   }
 
   function updateAnsweredCount(){
@@ -912,18 +847,128 @@
     $("#answered").textContent = answered;
     const coverage = Math.round((answered / allQ.length) * 100);
     $("#coverage").textContent = coverage + "%";
-    updateNavHints();
+    $("#answeredHint").textContent = `${answered} réponse(s)`;
   }
 
-  function updateNavHints(){
+  function updateCategoryProgress(){
     for (const cat of CATS){
       const total = cat.questions.length;
       const ans = cat.questions.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
-      const el = $(`#navhint-${cat.id}`);
-      if (el) el.textContent = `${ans}/${total}`;
+      const pill = $(`#pill-${cat.id}`);
+      if (pill) pill.textContent = `${ans}/${total}`;
+
+      const hint = $(`#navhint-${cat.id}`);
+      if (hint) hint.textContent = `${ans}/${total}`;
+
+      const check = $(`#navcheck-${cat.id}`);
+      if (check){
+        check.classList.toggle("ok", ans === total && total > 0);
+      }
     }
   }
 
+  function applyCollapseAnswered(){
+    const allQ = CATS.flatMap(c => c.questions);
+    for (const q of allQ){
+      const answered = !!document.querySelector(`input[name="${q.id}"]:checked`);
+      const el = document.getElementById(`q-${q.id}`);
+      if (!el) continue;
+      // collapse by default when answered, unless "show all" mode enabled
+      if (!window.__showAll){
+        el.classList.toggle("done", answered);
+      } else {
+        el.classList.remove("done");
+      }
+    }
+  }
+
+  function rebuildCompletedPanel(){
+    const panel = $("#completed");
+    panel.innerHTML = "";
+
+    // Group answered by category
+    for (const cat of CATS){
+      const answeredQs = cat.questions.filter(q => document.querySelector(`input[name="${q.id}"]:checked`));
+      if (answeredQs.length === 0) continue;
+
+      const det = document.createElement("details");
+      det.open = false;
+
+      det.innerHTML = `
+        <summary>
+          <span>${escapeHtml(cat.title)}</span>
+          <span class="sum-meta">
+            <span class="badgeMini">${answeredQs.length}/${cat.questions.length}</span>
+          </span>
+        </summary>
+      `;
+
+      for (const q of answeredQs){
+        const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
+        const score = Number(chosen?.dataset.score || 0);
+        const optIndex = Number((chosen?.id || "").split("_").pop());
+        const optLabel = q.options[optIndex]?.label || "—";
+
+        let extraLine = "";
+        if (q.id === "a4"){
+          const v = document.querySelector('input[name="v321"]:checked');
+          if (v){
+            const key = v.dataset.key;
+            const add = Number(v.dataset.add||0);
+            extraLine = `<div class="mutedline">Variante 3-2-1 : <b>${escapeHtml(key)}</b> (bonus +${add})</div>`;
+          }
+        }
+
+        const item = document.createElement("div");
+        item.className = "ansItem";
+        item.innerHTML = `
+          <div><b>${escapeHtml(q.title)}</b></div>
+          <div class="mutedline">Réponse : ${escapeHtml(optLabel)} · Score ${score}/${q.weight}</div>
+          ${extraLine}
+          <div class="row">
+            <button class="btnlink" data-edit="${escapeHtml(q.id)}">Modifier</button>
+            <button class="btnlink danger" data-clear="${escapeHtml(q.id)}">Effacer</button>
+          </div>
+        `;
+        det.appendChild(item);
+      }
+
+      panel.appendChild(det);
+    }
+
+    if (panel.children.length === 0){
+      panel.innerHTML = `<div class="small" style="color:var(--faint)">Aucune réponse pour l’instant.</div>`;
+    }
+
+    // Bind edit/clear
+    panel.querySelectorAll("[data-edit]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.currentTarget.dataset.edit;
+        const el = document.getElementById(`q-${id}`);
+        if (!el) return;
+        // temporarily show this question and scroll to it
+        window.__showAll = true;
+        applyCollapseAnswered();
+        el.scrollIntoView({behavior:"smooth", block:"center"});
+        // highlight a bit
+        el.style.outline = "2px solid rgba(138,180,255,.45)";
+        setTimeout(()=> el.style.outline = "", 1200);
+      });
+    });
+
+    panel.querySelectorAll("[data-clear]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = e.currentTarget.dataset.clear;
+        // clear radios
+        $$(`input[name="${id}"]`).forEach(r => r.checked = false);
+        // clear variant if 3-2-1 question
+        if (id === "a4") $$('input[name="v321"]').forEach(v => v.checked = false);
+        onAnyChange();
+      });
+    });
+  }
+
+  // --- Score & Radar ---
   function compute(){
     const allQ = CATS.flatMap(c => c.questions);
 
@@ -933,25 +978,33 @@
     const tagsCount = new Map();
     const missing = [];
 
-    // per-axis totals for radar
     const axisRaw = new Map(AXES.map(a => [a.key, 0]));
     const axisMax = new Map(AXES.map(a => [a.key, 0]));
 
     for (const q of allQ){
       max += q.weight;
-      axisMax.set(q.axisKey, (axisMax.get(q.axisKey) || 0) + q.weight);
+      axisMax.set(q.axisKey, (axisMax.get(q.axisKey)||0) + q.weight);
 
       const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
       if (!chosen){ missing.push(q); continue; }
 
-      const sc = Number(chosen.dataset.score || 0);
+      let sc = Number(chosen.dataset.score || 0);
+
+      // Apply 3-2-1 variant scoring (a4 only) if base is "Oui"
+      if (q.id === "a4" && sc >= 8){
+        const v = document.querySelector('input[name="v321"]:checked');
+        if (v){
+          const add = Number(v.dataset.add || 0);
+          sc = Math.min(q.weight, sc + add);
+        }
+      }
+
       raw += sc;
-      axisRaw.set(q.axisKey, (axisRaw.get(q.axisKey) || 0) + sc);
+      axisRaw.set(q.axisKey, (axisRaw.get(q.axisKey)||0) + sc);
 
       const tags = (chosen.dataset.tags || "").split(",").map(s => s.trim()).filter(Boolean);
-      for (const t of tags) tagsCount.set(t, (tagsCount.get(t) || 0) + 1);
+      for (const t of tags) tagsCount.set(t, (tagsCount.get(t)||0) + 1);
 
-      // Priorité si <= 50% du poids
       if (sc <= (q.weight/2)){
         const pr = (chosen.dataset.priority || "").trim();
         if (pr) priorities.push(pr);
@@ -960,8 +1013,6 @@
 
     const answered = allQ.length - missing.length;
     const coverage = answered / allQ.length;
-
-    // Score normalisé : pénalise la couverture (sinon le score ment)
     const normalized = max ? Math.round((raw / max) * 100 * (0.65 + 0.35 * coverage)) : 0;
 
     const level = getLevel(normalized, coverage);
@@ -970,43 +1021,30 @@
     updateUI(normalized, coverage, level, insights, priorities, tagsCount, missing);
     drawRadar(buildRadarValues(axisRaw, axisMax, coverage));
 
-    return { normalized, raw, max, coverage, level, priorities, tagsCount: Object.fromEntries(tagsCount), axisRaw:Object.fromEntries(axisRaw), axisMax:Object.fromEntries(axisMax) };
+    return { normalized, raw, max, coverage, axisRaw:Object.fromEntries(axisRaw), axisMax:Object.fromEntries(axisMax) };
   }
 
   function getLevel(score, coverage){
     if (coverage < 0.7) return { text: "Incomplet → score peu fiable", badge: "warn" };
-    if (score >= 85) return { text: "Solide (mais exigez des preuves)", badge: "ok" };
-    if (score >= 70) return { text: "Correct (risques résiduels)", badge: "warn" };
+    if (score >= 85) return { text: "Solide (mais prouve-le)", badge: "ok" };
+    if (score >= 70) return { text: "Correct (mais fragile)", badge: "warn" };
     if (score >= 50) return { text: "Fragile (ça casse sous stress)", badge: "bad" };
-    return { text: "Critique (fausse impression de sécurité)", badge: "bad" };
+    return { text: "Critique (fausse sécurité)", badge: "bad" };
   }
 
   function buildInsights(score, coverage, tagsCount, missingCount){
     const topTags = [...tagsCount.entries()].sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t);
     const lines = [];
 
-    if (missingCount > 0){
-      lines.push(`Il manque ${missingCount} réponse(s). Donc oui : votre score est un brouillon, pas un verdict.`);
-    }
-    if (coverage < 0.7){
-      lines.push("Couverture faible : ce que vous n’évaluez pas est souvent ce qui vous surprend en incident.");
-    } else {
-      lines.push("Le score ne prouve pas la sécurité. Il indique où vous devez exiger des preuves (tests, logs, séparation).");
-    }
+    if (missingCount) lines.push(`Il manque ${missingCount} réponse(s). Donc oui : le score est approximatif.`);
+    if (coverage < 0.7) lines.push("Couverture faible : vous laissez des angles morts. Ceux-là mordent en incident.");
 
-    if (score >= 85){
-      lines.push("Bien. Maintenant la question désagréable : combien de temps pour restaurer en conditions dégradées (droits, pression, dépendances) ?");
-    } else if (score >= 70){
-      lines.push("Base correcte. Mais est-ce que ça tient face à ransomware + suppression de comptes + urgence métier ?");
-    } else if (score >= 50){
-      lines.push("Vous avez probablement des sauvegardes… mais pas forcément une reprise fiable.");
-    } else {
-      lines.push("À ce niveau, arrêtez de vous rassurer. Priorité : immutabilité / séparation des pouvoirs / tests de restauration.");
-    }
+    if (score >= 85) lines.push("Bien. Maintenant : avez-vous des preuves de restauration en conditions dégradées ?");
+    else if (score >= 70) lines.push("Base correcte, mais le ransomware vise AD puis backup. Votre design casse-t-il cette chaîne ?");
+    else if (score >= 50) lines.push("Vous avez des backups, pas forcément une reprise fiable. Les tests et l’immutabilité sont vos dettes.");
+    else lines.push("Arrêtez de vous rassurer : immutabilité + séparation + tests réels. Sinon c’est du décor.");
 
-    if (topTags.length){
-      lines.push(`Thèmes dominants : ${topTags.join(", ")}. Est-ce maîtrisé… ou juste “traité” ?`);
-    }
+    if (topTags.length) lines.push(`Thèmes dominants : ${topTags.join(", ")}. Êtes-vous sûr que c’est “maîtrisé” ?`);
     return lines;
   }
 
@@ -1023,13 +1061,12 @@
 
     const ul = $("#insights");
     ul.innerHTML = "";
-    for (const line of insights){
+    insights.forEach(t => {
       const li = document.createElement("li");
-      li.textContent = line;
+      li.textContent = t;
       ul.appendChild(li);
-    }
+    });
 
-    // tags
     const tags = $("#tags");
     tags.innerHTML = "";
     const sortedTags = [...tagsCount.entries()].sort((a,b)=>b[1]-a[1]).slice(0,8);
@@ -1043,11 +1080,10 @@
     } else {
       const span = document.createElement("span");
       span.className = "tag";
-      span.textContent = "Répondez pour voir des thèmes";
+      span.textContent = "—";
       tags.appendChild(span);
     }
 
-    // priorities
     const pr = $("#priorities");
     pr.innerHTML = "";
     const uniq = [...new Set(priorities)].slice(0, 12);
@@ -1059,7 +1095,7 @@
       });
     } else {
       const li = document.createElement("li");
-      li.textContent = (missing.length ? "Répondez aux questions restantes pour faire ressortir des priorités." : "Pas d’alerte majeure détectée… mais continuez à tester et à prouver.");
+      li.textContent = missing.length ? "Répondez aux questions restantes pour faire ressortir des priorités." : "Pas d’urgence détectée… ou bien vous avez bien répondu.";
       pr.appendChild(li);
     }
 
@@ -1072,77 +1108,10 @@
     const cov = Math.round(coverage * 100);
     $("#toastHint").textContent = `· Couverture ${cov}% · ${level.text}`;
     t.classList.add("show");
-    window.clearTimeout(showToast._to);
-    showToast._to = window.setTimeout(()=> t.classList.remove("show"), 2600);
+    clearTimeout(showToast._to);
+    showToast._to = setTimeout(()=> t.classList.remove("show"), 2600);
   }
 
-  function resetAll(){
-    $$('input[type="radio"]').forEach(i => i.checked = false);
-    $$('input[type="checkbox"][data-variant]').forEach(i => i.checked = false);
-    $("#score").textContent = "—";
-    $("#barFill").style.width = "0%";
-    $("#levelText").textContent = "—";
-    const badge = $("#badge");
-    badge.className = "badge bad";
-    badge.textContent = "—";
-    $("#insights").innerHTML = `
-      <li>Répondez au questionnaire puis calculez.</li>
-      <li>Ensuite, cherchez ce qui manque : preuves, tests, séparation des pouvoirs, immutabilité.</li>
-    `;
-    $("#priorities").innerHTML = "<li>—</li>";
-    $("#tags").innerHTML = "";
-    $("#radarHint").textContent = "Répondez puis cliquez “Calculer” pour afficher la toile.";
-    drawRadar(null);
-    updateAnsweredCount();
-    updateNavHints();
-  }
-
-  function exportSummary(){
-    const result = compute();
-    const allQ = CATS.flatMap(c => c.questions);
-
-    // Collect 3-2-1 variants (if any)
-    const variants = $$('input[type="checkbox"][data-variant]:checked').map(c => c.dataset.variant);
-
-    const answers = {};
-    for (const q of allQ){
-      const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
-      if (!chosen){ answers[q.id] = null; continue; }
-      const optIndex = Number((chosen.id || "").split("_").pop());
-      answers[q.id] = {
-        mode: q.mode,
-        axis: q.axisKey,
-        weight: q.weight,
-        score: Number(chosen.dataset.score||0),
-        option: q.options[optIndex]?.label || "—"
-      };
-    }
-
-    const axisScores = {};
-    for (const a of AXES){
-      const raw = result.axisRaw[a.key] ?? 0;
-      const mx  = result.axisMax[a.key] ?? 0;
-      axisScores[a.key] = mx ? Math.round((raw/mx)*100) : 0;
-    }
-
-    const payload = {
-      generated_at: new Date().toISOString(),
-      score_total: result.normalized,
-      coverage: result.coverage,
-      radar: axisScores,
-      variants_321: variants,
-      answers
-    };
-
-    const text = JSON.stringify(payload, null, 2);
-    navigator.clipboard?.writeText(text).then(()=>{
-      showToast(result.normalized, result.coverage, {text:"Compte-rendu copié", badge:"ok"});
-    }).catch(()=>{
-      window.prompt("Copiez le JSON :", text);
-    });
-  }
-
-  // --- Radar chart (toile de maîtrise) ---
   function buildRadarValues(axisRaw, axisMax, coverage){
     const values = AXES.map(a => {
       const mx = axisMax.get(a.key) || 0;
@@ -1158,14 +1127,10 @@
     const w = canvas.width, h = canvas.height;
     ctx.clearRect(0,0,w,h);
 
-    // background
-    ctx.fillStyle = "rgba(0,0,0,0)";
-    ctx.fillRect(0,0,w,h);
-
-    const cx = Math.floor(w/2), cy = Math.floor(h/2)+10;
+    const cx = Math.floor(w/2), cy = Math.floor(h/2)+8;
     const r = Math.min(w,h) * 0.34;
 
-    // Grid circles
+    // Grid
     const levels = 5;
     for (let i=1;i<=levels;i++){
       const rr = r * (i/levels);
@@ -1176,7 +1141,6 @@
       ctx.stroke();
     }
 
-    // Axes + labels
     const n = AXES.length;
     for (let i=0;i<n;i++){
       const ang = (Math.PI*2 * i / n) - Math.PI/2;
@@ -1190,8 +1154,8 @@
       ctx.lineWidth = 1;
       ctx.stroke();
 
-      const lx = cx + Math.cos(ang)*(r+22);
-      const ly = cy + Math.sin(ang)*(r+22);
+      const lx = cx + Math.cos(ang)*(r+20);
+      const ly = cy + Math.sin(ang)*(r+20);
 
       ctx.font = "12px ui-sans-serif, system-ui";
       ctx.fillStyle = "rgba(232,237,247,0.92)";
@@ -1201,15 +1165,12 @@
     }
 
     if (!data){
-      // placeholder hint polygon faint
-      $("#radarHint").textContent = "La toile s’affiche après calcul. Les creux indiquent des angles morts potentiels.";
+      $("#radarHint").textContent = "Répondez puis calculez : la toile affichera vos creux (angles morts).";
       return;
     }
-
-    // If coverage low, note
     const cov = Math.round((data.coverage||0)*100);
     $("#radarHint").textContent = cov < 70
-      ? `Couverture ${cov}% : toile indicative (vous n’avez pas répondu partout).`
+      ? `Couverture ${cov}% : toile indicative.`
       : `Couverture ${cov}% : toile basée sur vos réponses.`;
 
     const vals = data.values;
@@ -1246,7 +1207,80 @@
     }
   }
 
-  // --- Tooltip logic (hover + click) ---
+  // --- Export / Reset ---
+  function exportSummary(){
+    const result = compute();
+    const allQ = CATS.flatMap(c => c.questions);
+
+    const answers = {};
+    for (const q of allQ){
+      const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
+      if (!chosen){ answers[q.id] = null; continue; }
+      const optIndex = Number((chosen.id || "").split("_").pop());
+      let score = Number(chosen.dataset.score||0);
+
+      // apply variant again for export
+      let v321 = null;
+      if (q.id === "a4" && score >= 8){
+        const v = document.querySelector('input[name="v321"]:checked');
+        if (v){
+          const add = Number(v.dataset.add||0);
+          const key = v.dataset.key;
+          score = Math.min(q.weight, score + add);
+          v321 = { key, add };
+        }
+      }
+
+      answers[q.id] = {
+        mode: q.mode,
+        axis: q.axisKey,
+        weight: q.weight,
+        score,
+        option: q.options[optIndex]?.label || "—",
+        variant_321: v321
+      };
+    }
+
+    const axisScores = {};
+    for (const a of AXES){
+      const raw = result.axisRaw[a.key] ?? 0;
+      const mx  = result.axisMax[a.key] ?? 0;
+      axisScores[a.key] = mx ? Math.round((raw/mx)*100) : 0;
+    }
+
+    const payload = {
+      generated_at: new Date().toISOString(),
+      score_total: result.normalized,
+      coverage: result.coverage,
+      radar: axisScores,
+      answers
+    };
+
+    const text = JSON.stringify(payload, null, 2);
+    navigator.clipboard?.writeText(text).then(()=>{
+      showToast(result.normalized, result.coverage, {text:"Compte-rendu copié", badge:"ok"});
+    }).catch(()=>{
+      window.prompt("Copiez le JSON :", text);
+    });
+  }
+
+  function resetAll(){
+    $$('input[type="radio"]').forEach(i => i.checked = false);
+    $$('input[name="v321"]').forEach(i => i.checked = false);
+    window.__showAll = false;
+    $("#score").textContent = "—";
+    $("#barFill").style.width = "0%";
+    $("#levelText").textContent = "—";
+    const badge = $("#badge");
+    badge.className = "badge bad";
+    badge.textContent = "—";
+    $("#tags").innerHTML = "";
+    $("#priorities").innerHTML = "<li>—</li>";
+    drawRadar(null);
+    onAnyChange();
+  }
+
+  // --- Tooltip logic ---
   const tip = $("#tip");
   const tipTitle = $("#tipTitle");
   const tipText = $("#tipText");
@@ -1270,7 +1304,6 @@
     tip.classList.add("show");
     tip.setAttribute("aria-hidden","false");
 
-    // Position near anchor, keep in viewport
     const margin = 12;
     const w = tip.offsetWidth;
     const h = tip.offsetHeight;
@@ -1286,9 +1319,7 @@
 
     if (top < margin){
       top = anchorRect.bottom + 10;
-      if (top + h > vh - margin){
-        top = Math.max(margin, vh - margin - h);
-      }
+      if (top + h > vh - margin) top = Math.max(margin, vh - margin - h);
     }
 
     tip.style.left = left + "px";
@@ -1301,57 +1332,52 @@
   }
 
   function attachTooltipHandlers(){
-    // Hover + click on .info
     document.addEventListener("mouseover", (e) => {
       const t = e.target.closest?.(".info[data-tip]");
       if (!t) return;
       const id = t.dataset.tip;
-      const rect = t.getBoundingClientRect();
-      showTip(id, rect);
+      showTip(id, t.getBoundingClientRect());
     });
-
     document.addEventListener("mouseout", (e) => {
       const t = e.target.closest?.(".info[data-tip]");
       if (!t) return;
-      // keep open if mouse is over tip itself
       const related = e.relatedTarget;
       if (related && (related === tip || tip.contains(related))) return;
       hideTip();
     });
-
-    // click to pin (toggle)
     document.addEventListener("click", (e) => {
       const info = e.target.closest?.(".info[data-tip]");
       if (info){
         const id = info.dataset.tip;
-        const rect = info.getBoundingClientRect();
-        // if already showing same, toggle
+        // toggle if same
         const isSame = tip.classList.contains("show") && tipTitle.textContent === (GLOSSARY[id]?.title || "");
-        if (isSame){ hideTip(); return; }
-        showTip(id, rect);
+        if (isSame) { hideTip(); return; }
+        showTip(id, info.getBoundingClientRect());
         return;
       }
-      // click outside tip closes
       if (tip.classList.contains("show") && !tip.contains(e.target)) hideTip();
     });
-
-    // keep tooltip open when hovering it
-    tip.addEventListener("mouseleave", () => hideTip());
+    tip.addEventListener("mouseleave", hideTip);
     $("#tipClose").addEventListener("click", hideTip);
-
-    // keyboard
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") hideTip();
-    });
+    document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") hideTip(); });
   }
 
-  // --- Events ---
+  // --- Buttons ---
   $("#btnScore").addEventListener("click", compute);
   $("#btnExport").addEventListener("click", exportSummary);
   $("#btnReset").addEventListener("click", resetAll);
-
-  $("#openAll").addEventListener("click", () => CATS.forEach(c => setOpen(c.id, true)));
-  $("#closeAll").addEventListener("click", () => CATS.forEach(c => setOpen(c.id, false)));
+  $("#openAll").addEventListener("click", () => {
+    // open all answered details
+    $$("#completed details").forEach(d => d.open = true);
+  });
+  $("#closeAll").addEventListener("click", () => {
+    $$("#completed details").forEach(d => d.open = false);
+  });
+  $("#showAllQs").addEventListener("click", () => {
+    window.__showAll = !window.__showAll;
+    $("#showAllQs").textContent = window.__showAll ? "Masquer les questions répondues" : "Afficher toutes les questions";
+    applyCollapseAnswered();
+  });
 
   // Init
   render();
