@@ -35,12 +35,29 @@
       margin-bottom: 20px;
       color: var(--accent);
     }
+    h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      color: var(--text);
+    }
     .description {
       font-size: 18px;
       color: var(--muted);
       margin-bottom: 40px;
     }
     .link-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+    .category {
+      margin-bottom: 30px;
+    }
+    .category .category-title {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .category-buttons {
       display: flex;
       justify-content: center;
       gap: 20px;
@@ -65,6 +82,9 @@
     .btn-calc {
       background-color: #3b82f6;
     }
+    .btn-other {
+      background-color: #facc15;
+    }
     footer {
       margin-top: 40px;
       font-size: 14px;
@@ -86,12 +106,38 @@
     <p class="description"> Public IT Tools - Home.</p>
 
     <div class="link-buttons">
-      <a href="cidr-manager.html">
-        <button class="btn-manager">Gestion des Sites et VLAN</button>
-      </a>
-      <a href="cidr-calc.html">
-        <button class="btn-calc">Calculs CIDR</button>
-      </a>
+      <!-- Category: Gestion des Réseaux -->
+      <div class="category">
+        <h2 class="category-title">Gestion des Réseaux</h2>
+        <div class="category-buttons">
+          <a href="cidr-manager.html">
+            <button class="btn-manager">Gestion des Sites et VLAN</button>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Category: Outils de Calcul -->
+      <div class="category">
+        <h2 class="category-title">Outils de Calcul</h2>
+        <div class="category-buttons">
+          <a href="cidr-calc.html">
+            <button class="btn-calc">Calculs CIDR</button>
+          </a>
+        </div>
+      </div>
+      
+      <!-- Category: Autres Outils (Ajout des dernières pages) -->
+      <div class="category">
+        <h2 class="category-title">Autres Outils</h2>
+        <div class="category-buttons">
+          <!-- Ajouter ici d'autres pages HTML -->
+          <!-- Exemple :
+          <a href="autre-outil.html">
+            <button class="btn-other">Autre Outil</button>
+          </a>
+          -->
+        </div>
+      </div>
     </div>
 
     <footer>
