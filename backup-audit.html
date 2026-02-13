@@ -3,12 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>backup-audit — QCM sauvegarde (audit + plan) </title>
+  <title>backup-audit — QCM</title>
   <style>
     :root{
       --bg:#0b0f17;
-      --panel:#0f1624;
-      --panel2:#0c1320;
       --text:#e8edf7;
       --muted:#a9b4c7;
       --faint:#6f7b91;
@@ -25,10 +23,10 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      /* fond simplifié (moins agressif) */
       background:
-        radial-gradient(1200px 600px at 30% -10%, rgba(138,180,255,.18), transparent 60%),
-        radial-gradient(900px 500px at 90% 0%, rgba(49,208,170,.14), transparent 60%),
-        radial-gradient(900px 500px at 20% 110%, rgba(255,204,102,.10), transparent 60%),
+        radial-gradient(900px 520px at 20% 0%, rgba(138,180,255,.14), transparent 62%),
+        radial-gradient(900px 520px at 90% 10%, rgba(49,208,170,.10), transparent 62%),
         var(--bg);
       color:var(--text);
       line-height:1.35;
@@ -44,7 +42,6 @@
       margin-top:7px;flex:0 0 auto;
     }
     h1{margin:0;font-size:19px;letter-spacing:.2px}
-    .subtitle{margin:6px 0 0;color:var(--muted);font-size:13px;max-width:760px}
     .top-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     button{
       border:1px solid var(--line);
@@ -85,12 +82,10 @@
       padding: 6px 10px;border-radius: 999px;border:1px solid var(--line);
       color: var(--muted);font-size: 12px;white-space:nowrap;
     }
-    .note{color:var(--muted);font-size:13px;margin:0 0 10px}
     .divider{height:1px;background: var(--line);margin: 12px 0}
     .small{font-size:12px;color:var(--muted)}
     .mutedline{color:var(--faint);font-size:12px}
 
-    /* NAV */
     .navlist{display:flex;flex-direction:column;gap:8px}
     .navbtn{
       width:100%;
@@ -121,7 +116,6 @@
     .navactions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .navactions button{padding:8px 10px;font-size:12px}
 
-    /* Categories */
     .cat{
       border:1px solid var(--line);
       background: rgba(0,0,0,.14);
@@ -139,40 +133,20 @@
     .cat-title .t{font-weight:950;font-size:13px}
     .cat-title .s{color:var(--muted);font-size:12px}
     .cat-bd{padding: 10px 12px 12px}
-    .bucket{
-      border-top:1px solid rgba(255,255,255,.08);
-      padding-top: 10px;
-      margin-top: 10px;
-    }
-    .bucket:first-child{border-top:none;padding-top:0;margin-top:0}
 
-    /* Questions as "cards" that collapse when answered */
     .q{
       border:1px solid rgba(255,255,255,.08);
       background: rgba(0,0,0,.16);
       border-radius: 14px;
       padding: 12px 12px 10px;
       margin: 10px 0;
-      transition: opacity .18s ease, transform .18s ease, max-height .22s ease, margin .22s ease, padding .22s ease;
-      max-height: 560px;
       overflow:hidden;
-    }
-    .q.done{
-      opacity: .25;
-      transform: translateY(-2px);
-      max-height: 0px;
-      padding-top: 0;
-      padding-bottom: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      border-width: 0;
     }
     .qhead{
       display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom: 8px;
     }
     .qtitle{margin:0;font-size:13px;color:var(--text);font-weight:900}
     .qmeta{color: var(--faint);font-size: 12px;white-space:nowrap;display:flex;align-items:center;gap:8px}
-
     .opts{display:grid;gap:8px;margin: 10px 0 6px}
     label.opt{
       display:flex;gap:10px;align-items:flex-start;
@@ -184,10 +158,8 @@
     }
     label.opt:hover{border-color: rgba(138,180,255,.35);background: rgba(138,180,255,.05)}
     input[type="radio"]{margin-top:2px;accent-color: var(--accent)}
-
     .hint{margin: 8px 0 0;color: var(--faint);font-size: 12px}
 
-    /* A "completed" area to keep answered accessible without scrolling roulette */
     .completed-list{display:flex;flex-direction:column;gap:8px}
     details{
       border:1px solid rgba(255,255,255,.10);
@@ -236,7 +208,6 @@
     .btnlink.danger{border-color: rgba(255,107,107,.35)}
     .btnlink.danger:hover{border-color: rgba(255,107,107,.70)}
 
-    /* Score side */
     .kpis{display:grid;grid-template-columns: 1fr 1fr;gap:10px}
     .kpi{border: 1px solid var(--line);border-radius: 14px;padding: 10px 10px;background: rgba(0,0,0,.16)}
     .kpi .t{color: var(--muted);font-size: 12px;margin-bottom: 4px}
@@ -262,7 +233,6 @@
     .tagrow{display:flex;gap:8px;flex-wrap:wrap;margin-top: 8px}
     .tag{font-size:11px;color: var(--muted);border: 1px solid rgba(255,255,255,.10);border-radius: 999px;padding: 6px 10px;background: rgba(255,255,255,.02)}
 
-    /* Radar */
     .radar{
       border:1px solid var(--line);
       border-radius: 14px;
@@ -272,7 +242,6 @@
     }
     canvas{max-width:100%;height:auto;display:block}
 
-    /* Tooltip popup */
     .info{
       width:18px;height:18px;border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
@@ -284,7 +253,7 @@
     .tip{
       position: fixed;
       z-index: 1000;
-      max-width: 440px;
+      max-width: 520px;
       padding: 12px 12px;
       border-radius: 14px;
       border:1px solid var(--line);
@@ -324,6 +293,35 @@
     .toast.show{display:flex}
     .toast .k{color: var(--muted);font-weight:900}
     .toast .v{font-weight:1000}
+
+    .issueRow{
+      padding: 10px 10px;
+      border-top:1px solid rgba(255,255,255,.08);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .issueRow:first-child{border-top:none}
+    .issueRow b{color:var(--text)}
+    .issueRow .mutedline{margin-top:6px}
+    .issueRow .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+
+    /* Export dialog (léger) */
+    dialog{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(15,22,36,.98);
+      color: var(--text);
+      box-shadow: var(--shadow);
+      padding: 0;
+      max-width: 520px;
+      width: min(520px, 92vw);
+    }
+    dialog::backdrop{background: rgba(0,0,0,.55)}
+    .dlg-hd{padding: 12px 14px; border-bottom:1px solid var(--line); font-weight:1000}
+    .dlg-bd{padding: 12px 14px}
+    .dlg-actions{display:flex; gap:10px; flex-wrap:wrap; padding: 0 14px 14px}
+    .dlg-actions button{padding: 9px 10px; font-size:12px}
+    .dlg-note{color: var(--muted); font-size:12px; margin: 0 0 10px}
   </style>
 </head>
 
@@ -333,11 +331,7 @@
     <div class="brand">
       <div class="dot" aria-hidden="true"></div>
       <div>
-        <h1>Backup-audit — QCM</h1>
-        <p class="subtitle">
-          Objectif : libérer l’écran au fur et à mesure. Une question répondue se replie dans “Réponses déjà données”.
-          Si vous doutez : prenez l’option la plus défavorable. Sinon le score ment.
-        </p>
+        <h1>backup-audit — QCM</h1>
       </div>
     </div>
     <div class="top-actions">
@@ -352,44 +346,34 @@
     <!-- LEFT -->
     <aside class="card" aria-label="Navigation & réponses">
       <div class="hd">
-        <h2>Navigation & état</h2>
+        <h2>Navigation</h2>
         <span class="pill"><span id="answered">0</span>/<span id="total">0</span></span>
       </div>
       <div class="body">
-        <div class="note">
-          Les catégories se cochent automatiquement quand elles sont complètes.
-        </div>
-
         <div class="navlist" id="nav"></div>
 
         <div class="navactions">
           <button class="secondary" id="openAll">Tout ouvrir</button>
           <button class="secondary" id="closeAll">Tout fermer</button>
-          <button class="secondary" id="showAllQs" title="Ré-affiche temporairement toutes les questions répondue">Afficher toutes les questions</button>
+          <button class="secondary" id="showAllQs">Afficher toutes les questions</button>
         </div>
 
         <div class="divider"></div>
 
         <div class="section-title" style="display:flex;justify-content:space-between;align-items:center">
-          <span>Réponses déjà données</span>
+          <span>Réponses</span>
           <span class="mutedline" id="answeredHint">—</span>
         </div>
 
         <div class="completed-list" id="completed"></div>
-
-        <div class="divider"></div>
-        <div class="small">
-          Cliquez une réponse pour la revoir et la modifier (bouton “Modifier”).
-          Les popups “i” expliquent les notions (3-2-1, immutabilité, etc.).
-        </div>
       </div>
     </aside>
 
     <!-- MAIN -->
     <main class="card" aria-label="Questionnaire">
       <div class="hd">
-        <h2>Questions restantes</h2>
-        <span class="pill">celles-ci disparaissent après réponse</span>
+        <h2>Questions</h2>
+        <span class="pill" id="midHint">—</span>
       </div>
       <div class="body" id="cats"></div>
     </main>
@@ -397,13 +381,13 @@
     <!-- RIGHT -->
     <aside class="card" aria-label="Score et toile">
       <div class="hd">
-        <h2>Toile de maîtrise</h2>
+        <h2>Résultats</h2>
         <span class="pill">0 → 100</span>
       </div>
       <div class="body">
         <div class="kpis">
           <div class="kpi">
-            <div class="t">Score total</div>
+            <div class="t">Score</div>
             <div class="v" id="score">—</div>
           </div>
           <div class="kpi">
@@ -422,23 +406,32 @@
         </div>
 
         <div class="radar">
-          <div class="mutedline" id="radarHint" style="margin-bottom:8px;">
-            Répondez puis calculez : les creux = angles morts.
-          </div>
+          <div class="mutedline" id="radarHint" style="margin-bottom:8px;">Répondez puis calculez.</div>
           <canvas id="radar" width="520" height="460"></canvas>
         </div>
 
         <div class="rec">
           <h3>Ce que ça suggère</h3>
-          <ul id="insights">
-            <li>Le score ne prouve pas la sécurité : il montre vos zones faibles.</li>
-            <li>Les “creux” sont souvent là où vous pensez être bon sans preuve.</li>
-          </ul>
+          <ul id="insights"><li>—</li></ul>
           <div class="tagrow" id="tags"></div>
+
+          <div style="margin-top:10px">
+            <details id="issuesBox">
+              <summary>
+                <span>À vérifier</span>
+                <span class="sum-meta">
+                  <span class="badgeMini" id="issuesCount">0</span>
+                </span>
+              </summary>
+              <div id="issues">
+                <div class="issueRow"><div class="mutedline">Aucune incohérence détectée.</div></div>
+              </div>
+            </details>
+          </div>
         </div>
 
         <div class="rec">
-          <h3>Priorités (actions)</h3>
+          <h3>Priorités</h3>
           <ul id="priorities"><li>—</li></ul>
         </div>
       </div>
@@ -460,6 +453,23 @@
   <span class="mutedline" id="toastHint"></span>
 </div>
 
+<!-- Export dialog -->
+<dialog id="exportDlg">
+  <div class="dlg-hd">Exporter</div>
+  <div class="dlg-bd">
+    <p class="dlg-note">
+      PDF : ouvre un rapport imprimable (vous faites “Imprimer” → “Enregistrer en PDF”).<br>
+      HTML : télécharge un fichier complet, lisible et archivable.
+    </p>
+  </div>
+  <div class="dlg-actions">
+    <button id="expHtml">Rapport HTML</button>
+    <button id="expPdf">PDF</button>
+    <button class="secondary" id="expJson">JSON (technique)</button>
+    <button class="secondary" id="expCancel">Annuler</button>
+  </div>
+</dialog>
+
 <script>
   const $ = (s) => document.querySelector(s);
   const $$ = (s) => Array.from(document.querySelectorAll(s));
@@ -470,7 +480,6 @@
     }[s]));
   }
 
-  // Axes de la toile
   const AXES = [
     { key:"Gouvernance", label:"Gouvernance" },
     { key:"Résilience",  label:"Résilience" },
@@ -482,61 +491,204 @@
     { key:"Conformité",  label:"Conformité" },
   ];
 
-  // Glossaire
   const GLOSSARY = {
     "321": {
-      title: "Règle 3-2-1 et variantes (scorées)",
-      text: "La base 3-2-1 : 3 copies, 2 supports, 1 hors site. Les variantes ajoutent de la résistance au ransomware et aux erreurs.",
+      title: "3-2-1 (et pourquoi les technos différentes comptent)",
+      text: "3 copies, 2 supports/technos, 1 hors site. Le but est de réduire les pannes corrélées et la compromission unique.",
       extra: `
-        <b>Variante(s) :</b><br>
-        • <b>3-2-1</b> : base.<br>
-        • <b>3-2-1-1</b> : +1 copie <i>offline ou immuable</i> (fort contre ransomware).<br>
-        • <b>3-2-1-1-0</b> : +0 erreur via <i>vérifs/tests</i> (restauration prouvée).<br>
-        • <b>4-3-2</b> : plus strict (souvent pour environnements sensibles).<br>
-        <b>Doute utile :</b> “hors site” mais même tenant/compte/identité = pas une vraie séparation.
+        <b>Pourquoi “2 technos” ?</b><br>
+        • Deux copies sur le même NAS/cluster = mêmes risques (erreur admin, ransomware, bug firmware, corruption).<br>
+        • Deux technos différentes = modes de panne différents (objet immuable, bande, stockage isolé…).<br><br>
+        <b>Piège :</b> “hors site” mais mêmes identités/admins → une compromission peut toucher toutes les copies.
       `
     },
     "immut": {
       title: "Immutabilité / WORM",
-      text: "WORM/Object Lock : impossibilité de modifier/supprimer avant une date. Essentiel contre ransomware.",
-      extra: "<b>Doute utile :</b> si l’admin backup peut désactiver/supprimer facilement, la protection est fragile."
+      text: "Object Lock/WORM : impossible de modifier/supprimer avant une date. Très utile contre ransomware.",
+      extra: "<b>Question clé :</b> qui peut lever la protection ou supprimer la policy ?"
     },
     "domain": {
-      title: "Backup server dans le domaine",
-      text: "Si le serveur de backup est joint au domaine, un compromission AD peut mener à la destruction des sauvegardes.",
-      extra: "<b>Doute utile :</b> l’attaquant vise AD puis backup. Votre design doit casser cette chaîne."
+      title: "Serveur backup et domaine AD",
+      text: "Si le serveur de backup est joint au domaine de prod, une compromission AD peut s’étendre au backup.",
+      extra: "<b>Objectif :</b> casser le chemin AD → backup (hors domaine / isolation / bastion)."
     },
-    "av": {
-      title: "Antivirus/EDR sur serveur de backup",
-      text: "Un AV/EDR mal configuré peut casser les jobs… mais l’absence totale peut rendre le serveur de backup trivial à compromettre.",
-      extra: "<b>Doute utile :</b> l’objectif est un contrôle adapté (whitelists, monitoring), pas “installer un agent et prier”."
+    "repo": {
+      title: "Repo en écriture avec comptes “courants”",
+      text: "Si Domain Admin / admins habituels peuvent écrire sur le dépôt, un attaquant qui vole ces accès peut supprimer/chiffrer les sauvegardes.",
+      extra: `
+        <b>Ce qu’on veut :</b><br>
+        • comptes dédiés backup (pas DA), MFA/JIT/bastion<br>
+        • accès réseau limité vers le storage<br>
+        • journaux hors de portée<br>
+        • immutabilité si possible
+      `
+    },
+    "integrity": {
+      title: "Vérification d’intégrité (bitrot, corruption, sabotage silencieux)",
+      text: "Un backup ‘OK’ peut être corrompu. Les vérifications (checksums/health checks) détectent la corruption avant l’incident.",
+      extra: `
+        <b>Preuves typiques :</b><br>
+        • rapports de “verify/health check” réguliers<br>
+        • checksums / scan intégrité<br>
+        • restaurations de contrôle (fichiers/VM/bases)
+      `
+    },
+    "coverage2": {
+      title: "Couverture des ‘trucs oubliés’",
+      text: "La reprise échoue souvent sur des éléments non sauvegardés : configs, secrets, identités, certificats, SaaS, dépôts Git/IaC…",
+      extra: `
+        <b>Exemples :</b> AD/IDP, M365/Google Workspace, secrets vault, certificats/PKI, DNS, configs réseau, Git, Terraform, pipelines CI/CD.
+      `
+    },
+    "keys": {
+      title: "Chiffrement des backups + gestion des clés",
+      text: "Chiffrer sans séparation des clés = protection fragile. La vraie question : qui peut lire/extraire les clés ?",
+      extra: `
+        <b>Bon signe :</b> KMS/rotation, accès minimal, séparation des rôles, logs d’accès aux clés.
+      `
+    },
+    "saferestore": {
+      title: "Restauration en environnement isolé (safe restore)",
+      text: "Restaurer directement en prod peut réinfecter. Un bac à sable permet de valider et scanner avant remise en prod.",
+      extra: "<b>Preuves :</b> runbook, réseau isolé, tests documentés, contrôles AV/EDR/scan post-restore."
+    },
+    "sabotage": {
+      title: "Détection de sabotage des backups (attaque silencieuse)",
+      text: "Un attaquant peut d’abord casser la rétention, supprimer des points, ou dégrader les jobs avant de chiffrer.",
+      extra: "<b>Preuves :</b> alertes sur changements de policy, suppressions, anomalies, baisse taux de succès, logs hors de portée."
     }
   };
 
-  // Helpers
   function opt(label, score, tags=[], priority=null, extra=null){
     return { label, score, tags, priority, extra };
   }
-  function q(id, title, weight, explainId, axisKey, mode, hint, options){
-    return { id, title, weight, explainId, axisKey, mode, hint, options };
+  function q(id, title, weight, explainId, axisKey, mode, hint, options, condition=null){
+    return { id, title, weight, explainId, axisKey, mode, hint, options, condition };
   }
 
-  // 3-2-1 variants with score add-ons (applied only if base question = "Oui")
-  // Add-on is capped so that total doesn't exceed the question weight.
+  function getAnswer(qid){
+    const chosen = document.querySelector(`input[name="${qid}"]:checked`);
+    if (!chosen) return null;
+    const optIndex = Number((chosen.id || "").split("_").pop());
+    const score = Number(chosen.dataset.score || 0);
+    const label = (chosen.closest("label")?.querySelector("div > div")?.textContent || "").trim();
+    return { qid, chosen, optIndex, score, label };
+  }
+
+  function isQuestionActive(qu){
+    if (!qu.condition) return true;
+    const a = getAnswer(qu.condition.qid);
+    if (!a) return false;
+    if (typeof qu.condition.minScore === "number") return a.score >= qu.condition.minScore;
+    if (typeof qu.condition.eqScore === "number") return a.score === qu.condition.eqScore;
+    return true;
+  }
+
+  function clearAnswer(qid){
+    $$(`input[name="${qid}"]`).forEach(r => r.checked = false);
+    if (qid === "a4") $$('input[name="v321"]').forEach(v => v.checked = false);
+  }
+
+  function enforceConditions(){
+    const all = allQuestions();
+    for (const qu of all){
+      const active = isQuestionActive(qu);
+      if (!active){
+        // si la question devient inactive, on supprime sa réponse (sinon score/rapport ment)
+        if (document.querySelector(`input[name="${qu.id}"]:checked`)) clearAnswer(qu.id);
+      }
+    }
+  }
+
   const VARIANTS_321 = [
-    { key:"321",       label:"3-2-1",         desc:"base", add: 0 },
-    { key:"321-1",     label:"3-2-1-1",       desc:"+1 offline/immuable", add: 2 },
-    { key:"321-1-0",   label:"3-2-1-1-0",     desc:"+1 offline/immuable +0 erreur (vérifs)", add: 4 },
-    { key:"432",       label:"4-3-2",         desc:"plus strict (copies/supports/hors site)", add: 2 },
-    { key:"gfs",       label:"GFS",           desc:"quotidien/hebdo/mensuel (rétention)", add: 1 }
+    { key:"321",       label:"3-2-1",       desc:"base", add: 0 },
+    { key:"321-1",     label:"3-2-1-1",     desc:"+1 offline/immuable", add: 2 },
+    { key:"321-1-0",   label:"3-2-1-1-0",   desc:"+ tests/vérifs", add: 4 },
+    { key:"gfs",       label:"GFS",         desc:"rétention (jour/sem/mois)", add: 1 }
   ];
 
-  // Structure par catégories (avec questions "cassantes" ajoutées)
+  // Bibliothèque rapport (détails “longs”)
+  const REPORT_LIBRARY = {
+    "a4": {
+      title: "Stratégie 3-2-1",
+      why: [
+        "Sans 3-2-1, une panne ou compromission peut emporter prod + backups.",
+        "‘2 supports/technos’ réduit les pannes corrélées (même firmware/cluster/admin error).",
+        "‘Hors site’ n’aide vraiment que si l’accès est séparé (identités/tenant/clé)."
+      ],
+      evidence: [
+        "Schéma des copies (où, quoi, comment, qui y accède).",
+        "Liste des identités/roles qui peuvent supprimer/modifier.",
+        "Logs de rétention / immutabilité / suppressions."
+      ]
+    },
+    "q321_5": {
+      title: "Vérification d’intégrité",
+      why: [
+        "Un job ‘OK’ peut produire une sauvegarde inutilisable (corruption, bitrot, sabotage).",
+        "L’intégrité se prouve par des vérifications et des restaurations de contrôle."
+      ],
+      evidence: [
+        "Rapports de verify/health-check planifiés.",
+        "Checksums ou scans d’intégrité.",
+        "Historique de restaurations de contrôle (preuves, temps, résultat)."
+      ]
+    },
+    "q321_6": {
+      title: "Couverture des éléments ‘oubliés’",
+      why: [
+        "Les incidents échouent souvent sur des dépendances : secrets, certificats, configs, identité, SaaS.",
+        "Être ‘bon sur les VM’ ne suffit pas si l’auth/DNS/PKI/SaaS n’est pas récupérable."
+      ],
+      evidence: [
+        "Inventaire des dépendances (secrets, PKI, DNS, SaaS, Git/IaC).",
+        "Procédures de restauration de ces briques.",
+        "Tests bout-en-bout (reprise applicative)."
+      ]
+    },
+    "qkey_1": {
+      title: "Chiffrement + gestion des clés",
+      why: [
+        "Chiffrer sans séparation des clés revient à mettre la clé sous le paillasson.",
+        "La question centrale : qui peut lire/extraire les clés (KMS, comptes cloud, admins) ?"
+      ],
+      evidence: [
+        "Politiques KMS/rotation, rôles et journaux d’accès aux clés.",
+        "Preuves de chiffrement (au repos / transit) selon techno.",
+        "Test de restauration avec gestion des clés (scénario réaliste)."
+      ]
+    },
+    "qrest_1": {
+      title: "Safe-restore (environnement isolé)",
+      why: [
+        "Restaurer directement en prod peut réinfecter ou réintroduire des fichiers malveillants.",
+        "L’isolation permet de valider/scan avant remise en prod."
+      ],
+      evidence: [
+        "Réseau/sandbox isolé, runbook, critères de validation.",
+        "Procédure de scan/EDR/AV après restauration.",
+        "Exercices documentés."
+      ]
+    },
+    "qops_1": {
+      title: "Détection sabotage backup",
+      why: [
+        "Un attaquant peut d’abord dégrader les backups (rétention, suppressions, échecs) avant de chiffrer.",
+        "Sans alertes sur les changements critiques, on découvre trop tard."
+      ],
+      evidence: [
+        "Alertes sur changements de policy/rétention/immutabilité.",
+        "Alertes sur suppressions massives ou anomalies.",
+        "Logs centralisés hors de portée des admins ‘courants’."
+      ]
+    }
+  };
+
   const CATS = [
     {
       id:"cat-audit-gouv",
       title:"Audit — Gouvernance & exigences",
-      subtitle:"objectifs, périmètre, rétention, conformité",
+      subtitle:"objectifs, périmètre, rétention",
       questions: [
         q("a1","RPO/RTO : objectifs chiffrés, documentés, validés ?",6,null,"Gouvernance","Audit","Sans objectifs, vous ne savez pas si c’est suffisant.", [
           opt("Oui, validés + documentés + revus",6,["Gouvernance"]),
@@ -558,57 +710,84 @@
     {
       id:"cat-audit-res",
       title:"Audit — Résilience & architecture",
-      subtitle:"3-2-1 scoré, hors site, offline/air-gap",
+      subtitle:"3-2-1, hors site, offline/air-gap",
       questions: [
         q("a4","Stratégie 3-2-1 : laquelle appliquez-vous réellement ?",12,"321","Résilience","Audit","Si tout est dans le même périmètre, un incident peut tout emporter.", [
-          // Score base intentionally not max: variants will upgrade
           opt("Oui, on applique une stratégie (je peux préciser laquelle)",8,["Résilience"],null,{ show321Variants:true }),
-          opt("Partiel (hors site mais séparation discutable)",4,["Résilience"],"Assurer séparation réelle : comptes/tenants, identités, support, site."),
-          opt("Non",0,["Résilience"],"Mettre 3-2-1 (idéalement 3-2-1-1-0) avant de vous rassurer.")
+          opt("Partiel",4,["Résilience"],"Rendre la séparation réelle (comptes/roles, réseau, storage, logs)."),
+          opt("Non",0,["Résilience"],"Mettre 3-2-1 (idéalement 3-2-1-1-0).")
         ]),
-        q("a5","Hors site : la copie externe est-elle indépendante (tenant/compte/identités) ?",8,null,"Résilience","Audit","“Hors site” mais mêmes droits = pas une vraie séparation.", [
-          opt("Oui (compte/tenant séparé + accès limité)",8,["Résilience"]),
-          opt("Partiel",4,["Résilience"],"Séparer comptes/tenants/clefs/identités pour réduire le blast radius."),
+        q("a5","Copie hors site : l’accès est-il réellement séparé ?",8,null,"Résilience","Audit","Si les mêmes identités y accèdent, ce n’est pas un vrai filet de sécurité.", [
+          opt("Oui : tenant/compte séparé + clés séparées + accès minimal",8,["Résilience"]),
+          opt("Partiel : même tenant mais rôles/comptes séparés + MFA + logs indépendants",6,["Résilience"],"Renforcer l’indépendance : clés/identités séparées + restrictions réseau + logs."),
+          opt("Faible : même tenant et/ou mêmes admins/identités",2,["Résilience"],"Séparer tenant/compte/identités : sinon une compromission touche tout."),
           opt("Non / inconnu",0,["Résilience"],"Créer une copie hors site réellement indépendante.")
-        ]),
+        ], { qid:"a4", minScore:4 }),
         q("a6","Copie offline/air-gap : avez-vous une copie difficilement atteignable en cas de compromission ?",8,null,"Résilience","Audit","Sans copie isolée, vous dépendez d’un seul scénario.", [
           opt("Oui (offline/isolée) + procédure",8,["Résilience","Sécurité"]),
           opt("Partiel (isolée mais accessible via mêmes identités)",4,["Résilience"],"Mettre une vraie isolation (identités, réseau, procédure)."),
           opt("Non",0,["Résilience"],"Ajouter une copie offline/air-gap ou immuable.")
-        ]),
+        ], { qid:"a4", minScore:4 }),
+
+        /* ✅ AJOUT : Q321-5 (branching après A4) */
+        q("q321_5","Vérification d’intégrité : détectez-vous corruption/bitrot avant l’incident ?",4,"integrity","Restauration","Audit","Sans vérif, vous pouvez découvrir un backup inutilisable au pire moment.", [
+          opt("Oui (health-check/verify réguliers + alertes)",4,["Restauration","Exploitation"]),
+          opt("Partiel (ponctuel / manuel)",2,["Restauration"],"Automatiser verify/health checks + conserver preuves."),
+          opt("Non / inconnu",0,["Restauration"],"Mettre une vérification d’intégrité (et la prouver).")
+        ], { qid:"a4", minScore:4 }),
+
+        /* ✅ AJOUT : Q321-6 (branching après A4) */
+        q("q321_6","Couverture : le plan inclut-il aussi secrets/configs/identités/certificats/SaaS ?",6,"coverage2","Couverture","Audit","Le restore échoue souvent sur ce qui n’est pas sauvegardé (secrets, PKI, DNS, SaaS…).", [
+          opt("Oui (inventorié + sauvegardé + testé)",6,["Couverture","Restauration"]),
+          opt("Partiel",3,["Couverture"],"Lister les dépendances (secrets, PKI, DNS, SaaS, Git/IaC) et les inclure."),
+          opt("Non",0,["Couverture"],"Faire l’inventaire des dépendances et les intégrer au plan.")
+        ], { qid:"a4", minScore:4 }),
       ]
     },
     {
       id:"cat-audit-sec",
-      title:"Audit — Sécurité (questions cassantes)",
-      subtitle:"immutabilité, AD, AV/EDR, séparation des pouvoirs",
+      title:"Audit — Sécurité",
+      subtitle:"immutabilité, AD, repo, accès",
       questions: [
         q("a7","Immutabilité/WORM : vos sauvegardes sont-elles protégées contre suppression/chiffrement ?",10,"immut","Sécurité","Audit","Si un attaquant peut détruire les backups, vous n’avez pas de plan B.", [
           opt("Oui (WORM/Object Lock) + vérifié",10,["Sécurité"]),
           opt("Partiel",5,["Sécurité"],"Ajouter immutabilité + séparation des identités + journaux."),
           opt("Non / inconnu",0,["Sécurité"],"Mettre des sauvegardes immuables et isolées : priorité ransomware.")
         ]),
-        q("a8","Votre serveur de backup est-il joint au domaine (AD) ?",10,"domain","Sécurité","Audit","Si oui, vous augmentez fortement le risque d’effet domino AD → backup.", [
-          opt("Non, serveur de backup hors domaine + identités dédiées",10,["Sécurité","Résilience"]),
-          opt("Partiel (joint mais durci / comptes séparés)",4,["Sécurité"],"Sortir le serveur de backup du domaine ou isoler fortement (identités, réseau, MFA, bastion)."),
-          opt("Oui, joint au domaine (classique)",0,["Sécurité"],"Priorité : casser la chaîne AD→backup (hors domaine / isolation / comptes dédiés).")
+        q("a8","Serveur de backup : est-il joint au domaine AD de production ?",6,"domain","Sécurité","Audit","Si oui, une compromission AD peut s'étendre au backup.", [
+          opt("Non (hors domaine / forêt d’admin dédiée)",6,["Sécurité","Résilience"]),
+          opt("Oui, joint mais isolation forte (bastion/réseau/durcissement)",3,["Sécurité"],"Planifier la sortie du domaine de prod, ou isoler fortement (réseau, bastion, MFA)."),
+          opt("Oui, joint au domaine de production",0,["Sécurité"],"Casser la chaîne AD→backup (hors domaine / isolation drastique).")
         ]),
-        q("a9","Le dépôt backup (repo) est-il accessible en écriture avec des identifiants “courants” (admins/domain admin) ?",10,null,"Sécurité","Audit","Si oui : en compromission, le repo est une cible facile.", [
-          opt("Non (accès restreint, comptes dédiés, MFA, traces)",10,["Sécurité"]),
-          opt("Partiel",4,["Sécurité"],"Réduire le blast radius : comptes dédiés, séparation, verrouillage, journaux hors de portée."),
-          opt("Oui / inconnu",0,["Sécurité"],"Retirer l’accès en écriture aux identités courantes : sinon le repo tombe.")
+        q("a8b","Identités : l’administration backup utilise-t-elle des comptes dédiés séparés des comptes courants / DA ?",4,null,"Sécurité","Audit","Hors domaine avec comptes partagés = séparation illusoire.", [
+          opt("Oui : comptes dédiés + MFA + bastion/JIT + logs",4,["Sécurité","Résilience"]),
+          opt("Partiel : comptes dédiés mais MFA/JIT incomplet",2,["Sécurité"],"Compléter : MFA + bastion/JIT + rotation + traces."),
+          opt("Non / inconnu (comptes courants / DA / partagés)",0,["Sécurité"],"Créer des identités backup dédiées et indépendantes des comptes de prod/DA.")
         ]),
-        q("a10","AV/EDR sur le serveur de backup, est-ce maîtrisé (exceptions, surveillance) ?",8,"av","Exploitation","Audit","Le piège : pas d’agent = compromission facile. Agent mal réglé = backups cassés.", [
-          opt("Oui (EDR/AV + exceptions + supervision) et ça n’impacte pas les jobs",8,["Exploitation","Sécurité"]),
-          opt("Partiel (agent présent mais ‘au pif’ / incidents)",4,["Exploitation"],"Configurer whitelists/exclusions, monitorer l’impact, valider avec éditeur backup."),
-          opt("Non",0,["Exploitation"],"Mettre un contrôle adapté (au minimum durcissement + monitoring), sinon la compromission est facile.")
+        q("a9","Dépôt backup (repo) : qui peut écrire/supprimer ?",10,"repo","Sécurité","Audit","Si des comptes “courants” écrivent sur le repo, une compromission peut tout effacer.", [
+          opt("Écriture uniquement via compte de service backup + réseau restreint + MFA/JIT pour admins",10,["Sécurité"]),
+          opt("Écriture via comptes dédiés backup (pas DA) + contrôles, mais MFA/JIT pas partout",7,["Sécurité"],"Standardiser MFA/JIT + restrictions réseau + logs hors de portée."),
+          opt("Écriture via admins IT généraux (pas DA)",3,["Sécurité"],"Retirer l’écriture aux admins généraux : comptes dédiés backup + contrôles."),
+          opt("DA / comptes courants / inconnu",0,["Sécurité"],"Retirer l’accès en écriture aux identités courantes : sinon le repo tombe.")
+        ]),
+        q("a10","Serveur de backup : AV/EDR maîtrisé (exceptions, surveillance) ?",8,"av","Exploitation","Audit","Agent absent = compromission facile. Agent mal réglé = backups cassés.", [
+          opt("Oui (EDR/AV + exceptions + supervision)",8,["Exploitation","Sécurité"]),
+          opt("Partiel (agent présent mais incidents)",4,["Exploitation"],"Configurer exclusions, monitorer l’impact, valider avec l’éditeur backup."),
+          opt("Non",0,["Exploitation"],"Mettre un contrôle adapté (durcissement + monitoring).")
+        ]),
+
+        /* ✅ AJOUT : QKEY-1 */
+        q("qkey_1","Chiffrement : sauvegardes chiffrées + gestion des clés réellement séparée ?",6,"keys","Sécurité","Audit","Chiffrer ne suffit pas : si les mêmes admins ont les clés, la protection est faible.", [
+          opt("Oui (KMS/rotation + accès minimal + logs)",6,["Sécurité","Conformité"]),
+          opt("Partiel (chiffré mais séparation/rotation incomplète)",3,["Sécurité"],"Séparer les rôles clés/données, activer rotation et journaliser l’accès."),
+          opt("Non / inconnu",0,["Sécurité"],"Activer chiffrement et sécuriser la gestion des clés (KMS, rôles, logs).")
         ]),
       ]
     },
     {
       id:"cat-audit-rest",
       title:"Audit — Restauration & preuves",
-      subtitle:"tests réels, reprise applicative, runbooks",
+      subtitle:"tests réels, reprise applicative",
       questions: [
         q("a11","Tests de restauration : vous restaurez réellement, avec preuves et temps mesuré ?",10,null,"Restauration","Audit","Un job OK n’est pas une restauration.", [
           opt("Oui (mensuel/trimestriel) + preuves",10,["Restauration"]),
@@ -617,42 +796,61 @@
         ]),
         q("a12","Reprise applicative : test bout-en-bout (dépendances, auth, données) ?",8,null,"Restauration","Audit","Restaurer une base ne prouve pas que le service repart.", [
           opt("Oui, scénarios bout-en-bout",8,["Restauration"]),
-          opt("Partiel (technique seulement)",4,["Restauration"],"Élargir les tests : dépendances, intégrations, secrets, DNS, certificats."),
+          opt("Partiel (technique seulement)",4,["Restauration"],"Élargir : dépendances, intégrations, secrets, DNS, certificats."),
           opt("Non",0,["Restauration"],"Tester la reprise applicative, pas juste la restauration technique.")
+        ]),
+
+        /* ✅ AJOUT : QREST-1 */
+        q("qrest_1","Safe-restore : restaurez-vous d’abord en environnement isolé avant remise en prod ?",6,"saferestore","Restauration","Audit","Restaurer en prod peut réinfecter. Une zone isolée réduit ce risque.", [
+          opt("Oui (sandbox isolé + validation/scan)",6,["Restauration","Sécurité"]),
+          opt("Partiel (quelques cas)",3,["Restauration"],"Formaliser un parcours safe-restore + preuves."),
+          opt("Non",0,["Restauration"],"Mettre un environnement isolé pour restaurations sensibles.")
         ]),
       ]
     },
     {
       id:"cat-audit-ops",
       title:"Audit — Exploitation",
-      subtitle:"alerting, dérives, capacité, fenêtres",
+      subtitle:"alerting, dérives, capacité",
       questions: [
         q("a13","Supervision : alertes fiables sur échecs/dérives + traitement ?",8,null,"Exploitation","Audit","Une sauvegarde non surveillée se dégrade.", [
           opt("Oui (alerting + escalade + suivi)",8,["Exploitation"]),
-          opt("Partiel (bruit/peu suivi)",4,["Exploitation"],"Fiabiliser alertes et instaurer une routine de traitement."),
+          opt("Partiel",4,["Exploitation"],"Fiabiliser alertes et instaurer une routine de traitement."),
           opt("Non",0,["Exploitation"],"Mettre alerting + routine : sinon ça va finir par casser.")
         ]),
-        q("a14","Capacité : croissance et fenêtres de backup modélisées + seuils ?",6,null,"Design","Audit","Quand la capacité manque, on coupe la rétention (mauvais réflexe).", [
+        q("a14","Capacité : croissance et fenêtres de backup modélisées + seuils ?",6,null,"Design","Audit","Quand la capacité manque, on coupe la rétention.", [
           opt("Oui (seuils + prévisions)",6,["Design","Exploitation"]),
-          opt("Partiel",3,["Design"],"Modéliser croissance et ajouter des alertes de capacité."),
+          opt("Partiel",3,["Design"],"Modéliser croissance et ajouter alertes de capacité."),
           opt("Non",0,["Design"],"Surveiller capacité/fenêtres : sinon perte de maîtrise.")
+        ]),
+
+        /* ✅ AJOUT : QOPS-1 */
+        q("qops_1","Détection sabotage : alertes sur suppressions/changements de policy/rétention/anomalies ?",6,"sabotage","Exploitation","Audit","Un attaquant peut dégrader les backups avant de frapper. Sans alertes, vous ne le verrez pas.", [
+          opt("Oui (alertes + logs hors de portée)",6,["Exploitation","Sécurité"]),
+          opt("Partiel",3,["Exploitation"],"Ajouter alertes ciblées (policy, suppressions, anomalies) + centraliser les logs."),
+          opt("Non",0,["Exploitation"],"Mettre des alertes ‘anti-sabotage’ et journaliser hors de portée.")
         ]),
       ]
     },
     {
       id:"cat-plan",
-      title:"Cible — Design / planification",
-      subtitle:"architecture, SaaS, tests prévus, conformité",
+      title:"Cible — Plan",
+      subtitle:"architecture, responsabilités, tests",
       questions: [
-        q("b1","Architecture cible : modèle clair (on-prem/cloud/hybride) + RACI ?",6,null,"Design","Plan","Sans design, vous aurez du bricolage.", [
-          opt("Oui (architecture + responsabilités)",6,["Design","Gouvernance"]),
-          opt("Partiel",3,["Design"],"Formaliser architecture + RACI (qui restaure, qui valide)."),
-          opt("Non",0,["Design"],"Définir l’architecture cible, sinon la solution arrive par hasard.")
+        q("b1a","Architecture cible : on sait où sont les copies (on-prem/cloud/hybride) et pourquoi ?",4,null,"Design","Plan","Sans modèle clair, ça finit en bricolage.", [
+          opt("Oui (schéma / modèle clair)",4,["Design","Gouvernance"]),
+          opt("Partiel",2,["Design"],"Documenter l’architecture cible (flux, copies, dépendances)."),
+          opt("Non",0,["Design"],"Définir l’architecture cible.")
+        ]),
+        q("b1b","Responsabilités (RACI) : qui exécute, qui valide, qui peut supprimer ?",2,null,"Gouvernance","Plan","Le flou tue les tests et les restores.", [
+          opt("Oui (RACI clair)",2,["Gouvernance"]),
+          opt("Partiel",1,["Gouvernance"],"Écrire un RACI minimal (restore, validation, changements, droits)."),
+          opt("Non",0,["Gouvernance"],"Définir qui fait quoi (RACI).")
         ]),
         q("b2","Immutabilité prévue (durées, exceptions, comptes séparés) ?",8,"immut","Sécurité","Plan","Si ce n’est pas dans le design, ça n’arrivera pas.", [
           opt("Oui",8,["Sécurité","Design"]),
           opt("En discussion",4,["Sécurité"],"Trancher et intégrer l’immutabilité au design."),
-          opt("Non",0,["Sécurité"],"Ajouter immutabilité au design : sinon vous serez vulnérable.")
+          opt("Non",0,["Sécurité"],"Ajouter immutabilité au design.")
         ]),
         q("b3","Plan de tests futur : calendrier + scénarios + preuves + responsable ?",6,null,"Restauration","Plan","Un test sans responsable saute en premier.", [
           opt("Oui",6,["Restauration","Gouvernance"]),
@@ -663,6 +861,10 @@
     },
   ];
 
+  function allQuestions(){ return CATS.flatMap(c => c.questions); }
+  function activeQuestions(){ return allQuestions().filter(isQuestionActive); }
+  function activeQuestionsByCat(cat){ return cat.questions.filter(isQuestionActive); }
+
   // --- Rendering ---
   function render(){
     const nav = $("#nav");
@@ -671,6 +873,7 @@
       const btn = document.createElement("button");
       btn.className = "navbtn";
       btn.type = "button";
+      btn.id = `navbtn-${cat.id}`;
       btn.innerHTML = `
         <span>${escapeHtml(cat.title)}</span>
         <span class="navmeta">
@@ -704,7 +907,7 @@
           <div class="t">${escapeHtml(cat.title)}</div>
           <div class="s">${escapeHtml(cat.subtitle)}</div>
         </div>
-        <span class="pill" id="pill-${cat.id}">0/${cat.questions.length}</span>
+        <span class="pill" id="pill-${cat.id}">—</span>
       `;
       sec.appendChild(hd);
 
@@ -718,9 +921,6 @@
       sec.appendChild(bd);
       cats.appendChild(sec);
     }
-
-    const allQ = CATS.flatMap(c => c.questions);
-    $("#total").textContent = allQ.length;
 
     document.addEventListener("change", onAnyChange);
     onAnyChange();
@@ -785,26 +985,26 @@
     hint.textContent = qu.hint;
     root.appendChild(hint);
 
-    // 3-2-1 variants picker (scored) — only for a4
+    // Variante 3-2-1 (a4)
     if (qu.id === "a4"){
       const sub = document.createElement("div");
-      sub.className = "bucket";
-      sub.id = "sub_321";
+      sub.className = "q";
+      sub.style.marginTop = "10px";
+      sub.style.background = "rgba(0,0,0,.10)";
       sub.style.display = "none";
+      sub.id = "sub_321";
       sub.innerHTML = `
-        <div style="font-weight:1000;font-size:12px;margin-bottom:8px;">
-          Variante(s) appliquée(s) (impacte le score de cette question)
+        <div class="qhead">
+          <p class="qtitle">Variante 3-2-1 (bonus)</p>
+          <div class="qmeta"><span>optionnel</span></div>
         </div>
-        <div class="small" style="margin-bottom:8px;color:var(--faint)">
-          Choisissez ce qui est réellement en place. Si vous cochez <b>3-2-1-1-0</b>, vous devriez avoir des preuves de vérification/restauration.
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px" id="vlist"></div>
+        <div class="opts" id="vlist"></div>
+        <div class="hint">Choisissez ce qui est réellement en place.</div>
       `;
       const list = sub.querySelector("#vlist");
       for (const v of VARIANTS_321){
         const row = document.createElement("label");
         row.className = "opt";
-        row.style.cursor = "pointer";
         row.innerHTML = `
           <input type="radio" name="v321" data-add="${v.add}" data-key="${escapeHtml(v.key)}">
           <div>
@@ -816,76 +1016,112 @@
       }
       root.appendChild(sub);
 
-      // Toggle show when base answer is "Oui"
       root.addEventListener("change", () => {
         const chosen = document.querySelector(`input[name="a4"]:checked`);
         const show = chosen && Number(chosen.dataset.score||0) >= 8;
         sub.style.display = show ? "block" : "none";
-        if (!show){
-          $$('input[name="v321"]').forEach(x => x.checked = false);
-        }
+        if (!show) $$('input[name="v321"]').forEach(x => x.checked = false);
       });
     }
 
     return root;
   }
 
-  // --- Dynamic regroup: answered questions collapse & appear in left "completed" ---
+  // --- Dynamic ---
   function onAnyChange(){
+    enforceConditions();
     updateAnsweredCount();
     updateCategoryProgress();
     rebuildCompletedPanel();
-    applyCollapseAnswered();
+    applyHideAnswered();
   }
 
   function updateAnsweredCount(){
-    const allQ = CATS.flatMap(c => c.questions);
-    const answered = allQ.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
+    const act = activeQuestions();
+    const answered = act.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
+
     $("#answered").textContent = answered;
-    const coverage = Math.round((answered / allQ.length) * 100);
-    $("#coverage").textContent = coverage + "%";
+    $("#total").textContent = act.length;
+
     $("#answeredHint").textContent = `${answered} réponse(s)`;
+    $("#midHint").textContent = `${Math.max(0, act.length-answered)} restante(s)`;
+
+    const coverage = act.length ? Math.round((answered / act.length) * 100) : 0;
+    $("#coverage").textContent = coverage + "%";
   }
 
   function updateCategoryProgress(){
     for (const cat of CATS){
-      const total = cat.questions.length;
-      const ans = cat.questions.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
+      const act = activeQuestionsByCat(cat);
+      const total = act.length;
+      const ans = act.filter(q => document.querySelector(`input[name="${q.id}"]:checked`)).length;
+
       const pill = $(`#pill-${cat.id}`);
-      if (pill) pill.textContent = `${ans}/${total}`;
+      if (pill) pill.textContent = total ? `${ans}/${total}` : "—";
 
       const hint = $(`#navhint-${cat.id}`);
-      if (hint) hint.textContent = `${ans}/${total}`;
+      if (hint) hint.textContent = total ? `${ans}/${total}` : "—";
 
       const check = $(`#navcheck-${cat.id}`);
-      if (check){
-        check.classList.toggle("ok", ans === total && total > 0);
-      }
+      if (check) check.classList.toggle("ok", total > 0 && ans === total);
+
+      // masque nav si la catégorie n’a aucune question active
+      const navbtn = $(`#navbtn-${cat.id}`);
+      if (navbtn) navbtn.style.display = total ? "" : "none";
     }
   }
 
-  function applyCollapseAnswered(){
-    const allQ = CATS.flatMap(c => c.questions);
-    for (const q of allQ){
-      const answered = !!document.querySelector(`input[name="${q.id}"]:checked`);
+  function applyHideAnswered(){
+    const all = allQuestions();
+
+    // questions: hide answered, hide inactive always
+    for (const q of all){
       const el = document.getElementById(`q-${q.id}`);
       if (!el) continue;
-      // collapse by default when answered, unless "show all" mode enabled
-      if (!window.__showAll){
-        el.classList.toggle("done", answered);
-      } else {
-        el.classList.remove("done");
+
+      const active = isQuestionActive(q);
+      if (!active){
+        el.style.display = "none";
+        continue;
       }
+      const answered = !!document.querySelector(`input[name="${q.id}"]:checked`);
+      if (!window.__showAll && answered) el.style.display = "none";
+      else el.style.display = "";
     }
+
+    // categories: hide when empty (no active unanswered)
+    for (const cat of CATS){
+      const sec = document.getElementById(cat.id);
+      if (!sec) continue;
+      if (window.__showAll){ sec.style.display = activeQuestionsByCat(cat).length ? "" : "none"; continue; }
+
+      const act = activeQuestionsByCat(cat);
+      if (!act.length){ sec.style.display = "none"; continue; }
+      const remaining = act.some(q => !document.querySelector(`input[name="${q.id}"]:checked`));
+      sec.style.display = remaining ? "" : "none";
+    }
+  }
+
+  function revealQuestion(id){
+    const q = allQuestions().find(x => x.id === id);
+    if (!q || !isQuestionActive(q)) return;
+
+    const el = document.getElementById(`q-${id}`);
+    if (!el) return;
+    window.__showAll = true;
+    applyHideAnswered();
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+    el.style.outline = "2px solid rgba(138,180,255,.45)";
+    setTimeout(()=> el.style.outline = "", 1200);
   }
 
   function rebuildCompletedPanel(){
     const panel = $("#completed");
     panel.innerHTML = "";
 
-    // Group answered by category
     for (const cat of CATS){
-      const answeredQs = cat.questions.filter(q => document.querySelector(`input[name="${q.id}"]:checked`));
+      const act = activeQuestionsByCat(cat);
+      const answeredQs = act.filter(q => document.querySelector(`input[name="${q.id}"]:checked`));
       if (answeredQs.length === 0) continue;
 
       const det = document.createElement("details");
@@ -895,24 +1131,26 @@
         <summary>
           <span>${escapeHtml(cat.title)}</span>
           <span class="sum-meta">
-            <span class="badgeMini">${answeredQs.length}/${cat.questions.length}</span>
+            <span class="badgeMini">${answeredQs.length}/${act.length}</span>
           </span>
         </summary>
       `;
 
       for (const q of answeredQs){
         const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
-        const score = Number(chosen?.dataset.score || 0);
+        const baseScore = Number(chosen?.dataset.score || 0);
         const optIndex = Number((chosen?.id || "").split("_").pop());
         const optLabel = q.options[optIndex]?.label || "—";
 
+        let score = baseScore;
         let extraLine = "";
-        if (q.id === "a4"){
+        if (q.id === "a4" && score >= 8){
           const v = document.querySelector('input[name="v321"]:checked');
           if (v){
             const key = v.dataset.key;
             const add = Number(v.dataset.add||0);
-            extraLine = `<div class="mutedline">Variante 3-2-1 : <b>${escapeHtml(key)}</b> (bonus +${add})</div>`;
+            score = Math.min(q.weight, score + add);
+            extraLine = `<div class="mutedline">Variante : <b>${escapeHtml(key)}</b> (bonus +${add})</div>`;
           }
         }
 
@@ -937,37 +1175,100 @@
       panel.innerHTML = `<div class="small" style="color:var(--faint)">Aucune réponse pour l’instant.</div>`;
     }
 
-    // Bind edit/clear
     panel.querySelectorAll("[data-edit]").forEach(btn => {
-      btn.addEventListener("click", (e) => {
-        const id = e.currentTarget.dataset.edit;
-        const el = document.getElementById(`q-${id}`);
-        if (!el) return;
-        // temporarily show this question and scroll to it
-        window.__showAll = true;
-        applyCollapseAnswered();
-        el.scrollIntoView({behavior:"smooth", block:"center"});
-        // highlight a bit
-        el.style.outline = "2px solid rgba(138,180,255,.45)";
-        setTimeout(()=> el.style.outline = "", 1200);
-      });
+      btn.addEventListener("click", (e) => revealQuestion(e.currentTarget.dataset.edit));
     });
 
     panel.querySelectorAll("[data-clear]").forEach(btn => {
       btn.addEventListener("click", (e) => {
         const id = e.currentTarget.dataset.clear;
-        // clear radios
-        $$(`input[name="${id}"]`).forEach(r => r.checked = false);
-        // clear variant if 3-2-1 question
-        if (id === "a4") $$('input[name="v321"]').forEach(v => v.checked = false);
+        clearAnswer(id);
         onAnyChange();
       });
     });
   }
 
+  // --- Issues (doutes) ---
+  function detectIssues(){
+    const issues = [];
+    const push = (title, text, related=[]) => issues.push({ title, text, related });
+
+    const a4 = getAnswer("a4");
+    const a5 = getAnswer("a5");
+    const a7 = getAnswer("a7");
+    const a8 = getAnswer("a8");
+    const a8b = getAnswer("a8b");
+    const a9 = getAnswer("a9");
+    const a11 = getAnswer("a11");
+    const v321 = document.querySelector('input[name="v321"]:checked');
+    const vKey = v321?.dataset?.key || null;
+
+    if (a8 && a8.score === 6 && a8b && a8b.score === 0){
+      push(
+        "Séparation d’identité absente",
+        "Vous indiquez “hors domaine”, mais l’admin backup n’est pas séparée. Un accès volé “du quotidien” peut encore toucher le backup.",
+        ["a8","a8b","a9"]
+      );
+    }
+
+    if (vKey === "321-1-0"){
+      if (!a11) {
+        push("3-2-1-1-0 sans test renseigné","Vous annoncez des vérifs/tests mais les tests de restauration ne sont pas renseignés.",["a4","a11"]);
+      } else if (a11.score < 10){
+        push("3-2-1-1-0 vs tests","3-2-1-1-0 suppose des tests solides. Ici c’est partiel.",["a4","a11"]);
+      }
+    }
+
+    if (a4 && a4.score >= 8 && a5 && a5.score <= 2){
+      push(
+        "Copie hors site peu séparée",
+        "Vous dites appliquer une stratégie, mais la copie ‘hors site’ semble accessible via les mêmes identités/tenant/admins. Une compromission peut toucher les deux copies.",
+        ["a4","a5"]
+      );
+    }
+
+    if (a7 && a7.score === 10 && a9 && a9.score === 0){
+      push(
+        "Immutabilité vs accès repo",
+        "Vous déclarez l’immutabilité vérifiée, mais le repo est accessible en écriture par des comptes très puissants (ou inconnus). À re-valider : qui peut désactiver/supprimer la protection ?",
+        ["a7","a9","a8b"]
+      );
+    }
+
+    return issues;
+  }
+
+  function renderIssues(issues){
+    $("#issuesCount").textContent = String(issues.length);
+    const box = $("#issues");
+
+    if (!issues.length){
+      box.innerHTML = `<div class="issueRow"><div class="mutedline">Aucune incohérence détectée.</div></div>`;
+      return;
+    }
+
+    box.innerHTML = "";
+    for (const it of issues){
+      const div = document.createElement("div");
+      div.className = "issueRow";
+      div.innerHTML = `
+        <div><b>${escapeHtml(it.title)}</b></div>
+        <div class="mutedline">${escapeHtml(it.text)}</div>
+        <div class="row">
+          ${(it.related||[]).map(qid => `<button class="btnlink" data-jump="${escapeHtml(qid)}">Revoir ${escapeHtml(qid.toUpperCase())}</button>`).join("")}
+        </div>
+      `;
+      box.appendChild(div);
+    }
+
+    box.querySelectorAll("[data-jump]").forEach(btn => {
+      btn.addEventListener("click", (e) => revealQuestion(e.currentTarget.dataset.jump));
+    });
+  }
+
   // --- Score & Radar ---
   function compute(){
-    const allQ = CATS.flatMap(c => c.questions);
+    const actQ = activeQuestions();
 
     let raw = 0;
     let max = 0;
@@ -978,7 +1279,7 @@
     const axisRaw = new Map(AXES.map(a => [a.key, 0]));
     const axisMax = new Map(AXES.map(a => [a.key, 0]));
 
-    for (const q of allQ){
+    for (const q of actQ){
       max += q.weight;
       axisMax.set(q.axisKey, (axisMax.get(q.axisKey)||0) + q.weight);
 
@@ -987,7 +1288,6 @@
 
       let sc = Number(chosen.dataset.score || 0);
 
-      // Apply 3-2-1 variant scoring (a4 only) if base is "Oui"
       if (q.id === "a4" && sc >= 8){
         const v = document.querySelector('input[name="v321"]:checked');
         if (v){
@@ -1008,40 +1308,41 @@
       }
     }
 
-    const answered = allQ.length - missing.length;
-    const coverage = answered / allQ.length;
+    const answered = actQ.length - missing.length;
+    const coverage = actQ.length ? answered / actQ.length : 0;
+
     const normalized = max ? Math.round((raw / max) * 100 * (0.65 + 0.35 * coverage)) : 0;
 
     const level = getLevel(normalized, coverage);
-    const insights = buildInsights(normalized, coverage, tagsCount, missing.length);
-
+    const insights = buildInsights(normalized, coverage, missing.length);
     updateUI(normalized, coverage, level, insights, priorities, tagsCount, missing);
+
+    renderIssues(detectIssues());
     drawRadar(buildRadarValues(axisRaw, axisMax, coverage));
 
-    return { normalized, raw, max, coverage, axisRaw:Object.fromEntries(axisRaw), axisMax:Object.fromEntries(axisMax) };
+    return {
+      normalized, raw, max, coverage,
+      axisRaw: Object.fromEntries(axisRaw),
+      axisMax: Object.fromEntries(axisMax)
+    };
   }
 
   function getLevel(score, coverage){
-    if (coverage < 0.7) return { text: "Incomplet → score peu fiable", badge: "warn" };
-    if (score >= 85) return { text: "Solide (mais prouve-le)", badge: "ok" };
-    if (score >= 70) return { text: "Correct (mais fragile)", badge: "warn" };
-    if (score >= 50) return { text: "Fragile (ça casse sous stress)", badge: "bad" };
-    return { text: "Critique (fausse sécurité)", badge: "bad" };
+    if (coverage < 0.7) return { text: "Incomplet", badge: "warn" };
+    if (score >= 85) return { text: "Solide", badge: "ok" };
+    if (score >= 70) return { text: "Correct", badge: "warn" };
+    if (score >= 50) return { text: "Fragile", badge: "bad" };
+    return { text: "Critique", badge: "bad" };
   }
 
-  function buildInsights(score, coverage, tagsCount, missingCount){
-    const topTags = [...tagsCount.entries()].sort((a,b)=>b[1]-a[1]).slice(0,3).map(([t])=>t);
+  function buildInsights(score, coverage, missingCount){
     const lines = [];
-
-    if (missingCount) lines.push(`Il manque ${missingCount} réponse(s). Donc oui : le score est approximatif.`);
-    if (coverage < 0.7) lines.push("Couverture faible : vous laissez des angles morts. Ceux-là mordent en incident.");
-
-    if (score >= 85) lines.push("Bien. Maintenant : avez-vous des preuves de restauration en conditions dégradées ?");
-    else if (score >= 70) lines.push("Base correcte, mais le ransomware vise AD puis backup. Votre design casse-t-il cette chaîne ?");
-    else if (score >= 50) lines.push("Vous avez des backups, pas forcément une reprise fiable. Les tests et l’immutabilité sont vos dettes.");
-    else lines.push("Arrêtez de vous rassurer : immutabilité + séparation + tests réels. Sinon c’est du décor.");
-
-    if (topTags.length) lines.push(`Thèmes dominants : ${topTags.join(", ")}. Êtes-vous sûr que c’est “maîtrisé” ?`);
+    if (missingCount) lines.push(`Il manque ${missingCount} réponse(s) : score approximatif.`);
+    if (coverage < 0.7) lines.push("Couverture faible : angles morts probables.");
+    if (score >= 85) lines.push("OK. Reste : preuves de restauration et séparation réelle des accès.");
+    else if (score >= 70) lines.push("Correct, mais une compromission d’identités ne doit pas pouvoir effacer toutes les copies.");
+    else if (score >= 50) lines.push("Vous avez des backups. La reprise fiable est encore discutable (tests / protections).");
+    else lines.push("Priorité : immutabilité + séparation d’accès + tests réels.");
     return lines;
   }
 
@@ -1092,7 +1393,7 @@
       });
     } else {
       const li = document.createElement("li");
-      li.textContent = missing.length ? "Répondez aux questions restantes pour faire ressortir des priorités." : "Pas d’urgence détectée… ou bien vous avez bien répondu.";
+      li.textContent = missing.length ? "Répondez au reste pour faire ressortir des priorités." : "—";
       pr.appendChild(li);
     }
 
@@ -1106,7 +1407,7 @@
     $("#toastHint").textContent = `· Couverture ${cov}% · ${level.text}`;
     t.classList.add("show");
     clearTimeout(showToast._to);
-    showToast._to = setTimeout(()=> t.classList.remove("show"), 2600);
+    showToast._to = setTimeout(()=> t.classList.remove("show"), 2200);
   }
 
   function buildRadarValues(axisRaw, axisMax, coverage){
@@ -1127,7 +1428,6 @@
     const cx = Math.floor(w/2), cy = Math.floor(h/2)+8;
     const r = Math.min(w,h) * 0.34;
 
-    // Grid
     const levels = 5;
     for (let i=1;i<=levels;i++){
       const rr = r * (i/levels);
@@ -1162,17 +1462,14 @@
     }
 
     if (!data){
-      $("#radarHint").textContent = "Répondez puis calculez : la toile affichera vos creux (angles morts).";
+      $("#radarHint").textContent = "Répondez puis calculez.";
       return;
     }
     const cov = Math.round((data.coverage||0)*100);
-    $("#radarHint").textContent = cov < 70
-      ? `Couverture ${cov}% : toile indicative.`
-      : `Couverture ${cov}% : toile basée sur vos réponses.`;
+    $("#radarHint").textContent = `Couverture ${cov}%`;
 
     const vals = data.values;
 
-    // Polygon
     ctx.beginPath();
     for (let i=0;i<n;i++){
       const ang = (Math.PI*2 * i / n) - Math.PI/2;
@@ -1188,7 +1485,6 @@
     ctx.fill();
     ctx.stroke();
 
-    // Points
     for (let i=0;i<n;i++){
       const ang = (Math.PI*2 * i / n) - Math.PI/2;
       const rr = r * Math.max(0, Math.min(1, vals[i]));
@@ -1204,19 +1500,222 @@
     }
   }
 
-  // --- Export / Reset ---
-  function exportSummary(){
-    const result = compute();
-    const allQ = CATS.flatMap(c => c.questions);
+  // --- Export: JSON / Rapport HTML / PDF (print-to-pdf) ---
+  function buildReportData(){
+    const res = compute();
+    const actQ = activeQuestions();
 
-    const answers = {};
-    for (const q of allQ){
+    const answers = actQ.map(q => {
       const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
-      if (!chosen){ answers[q.id] = null; continue; }
+      if (!chosen){
+        return { id:q.id, title:q.title, axis:q.axisKey, weight:q.weight, option:null, score:null };
+      }
       const optIndex = Number((chosen.id || "").split("_").pop());
       let score = Number(chosen.dataset.score||0);
+      let variant = null;
 
-      // apply variant again for export
+      if (q.id === "a4" && score >= 8){
+        const v = document.querySelector('input[name="v321"]:checked');
+        if (v){
+          const add = Number(v.dataset.add||0);
+          const key = v.dataset.key;
+          score = Math.min(q.weight, score + add);
+          variant = { key, add };
+        }
+      }
+
+      return {
+        id:q.id,
+        title:q.title,
+        axis:q.axisKey,
+        weight:q.weight,
+        option: q.options[optIndex]?.label || "—",
+        score,
+        variant
+      };
+    });
+
+    const axisScores = AXES.map(a => {
+      const raw = res.axisRaw[a.key] ?? 0;
+      const mx  = res.axisMax[a.key] ?? 0;
+      const pct = mx ? Math.round((raw/mx)*100) : 0;
+      return { axis:a.key, pct, raw, max:mx };
+    });
+
+    const issues = detectIssues();
+
+    let radarPng = null;
+    try{
+      radarPng = $("#radar").toDataURL("image/png");
+    }catch(e){ radarPng = null; }
+
+    return {
+      generated_at: new Date().toISOString(),
+      score_total: res.normalized,
+      coverage: res.coverage,
+      level: getLevel(res.normalized, res.coverage),
+      axisScores,
+      issues,
+      answers,
+      radarPng
+    };
+  }
+
+  function buildDetailedReportHTML(data){
+    const covPct = Math.round((data.coverage||0)*100);
+    const issuesCount = data.issues?.length || 0;
+
+    const axisTable = data.axisScores.map(a => `
+      <tr>
+        <td>${escapeHtml(a.axis)}</td>
+        <td style="text-align:right">${a.pct}%</td>
+        <td style="text-align:right">${a.raw}/${a.max}</td>
+      </tr>
+    `).join("");
+
+    const issuesHtml = issuesCount ? data.issues.map(it => `
+      <div class="blk">
+        <div class="h">${escapeHtml(it.title)}</div>
+        <div class="t">${escapeHtml(it.text)}</div>
+        <div class="s">Liens : ${(it.related||[]).map(x=>escapeHtml(x.toUpperCase())).join(", ")}</div>
+      </div>
+    `).join("") : `<div class="blk"><div class="t">Aucune incohérence détectée.</div></div>`;
+
+    const answersHtml = data.answers.map(a => {
+      const lib = REPORT_LIBRARY[a.id];
+      const ratio = (a.score == null || a.weight === 0) ? null : (a.score / a.weight);
+      let verdict = "Non renseigné";
+      if (ratio != null){
+        if (ratio >= 0.8) verdict = "Plutôt maîtrisé";
+        else if (ratio >= 0.45) verdict = "Partiel";
+        else verdict = "Faible / Risque";
+      }
+
+      const why = lib?.why?.length ? `<ul>${lib.why.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>` : "";
+      const evidence = lib?.evidence?.length ? `<ul>${lib.evidence.map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>` : "";
+
+      const variantLine = a.variant ? `<div class="s">Variante 3-2-1 : <b>${escapeHtml(a.variant.key)}</b> (bonus +${a.variant.add})</div>` : "";
+
+      return `
+        <div class="blk">
+          <div class="h">${escapeHtml(a.title)}</div>
+          <div class="t"><b>Réponse :</b> ${escapeHtml(a.option || "—")} ${variantLine}</div>
+          <div class="s"><b>Score :</b> ${a.score == null ? "—" : `${a.score}/${a.weight}`} · <b>Lecture :</b> ${escapeHtml(verdict)} · <b>Axe :</b> ${escapeHtml(a.axis)}</div>
+          ${why ? `<div class="t"><b>Pourquoi ça compte :</b>${why}</div>` : ""}
+          ${evidence ? `<div class="t"><b>Preuves attendues :</b>${evidence}</div>` : ""}
+        </div>
+      `;
+    }).join("");
+
+    const radarImg = data.radarPng ? `<img src="${data.radarPng}" alt="Radar" style="max-width:100%;border:1px solid #1c2a44;border-radius:12px">` : "";
+
+    return `
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rapport — backup-audit</title>
+<style>
+  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial; margin:24px; color:#111; line-height:1.35}
+  h1{margin:0 0 6px}
+  .meta{color:#444; margin:0 0 18px}
+  .grid{display:grid; grid-template-columns: 1fr 1fr; gap:16px}
+  @media print{ .noPrint{display:none} body{margin:12mm} }
+  @media (max-width: 900px){ .grid{grid-template-columns:1fr} }
+  .card{border:1px solid #ddd; border-radius:12px; padding:14px}
+  .kpi{display:flex; gap:14px; flex-wrap:wrap}
+  .k{border:1px solid #eee; border-radius:10px; padding:10px 12px; min-width: 160px}
+  .k .t{color:#666; font-size:12px}
+  .k .v{font-size:22px; font-weight:900}
+  table{width:100%; border-collapse:collapse; margin-top:10px}
+  th,td{border-bottom:1px solid #eee; padding:8px 6px; text-align:left; font-size:13px}
+  th{color:#444}
+  .blk{border:1px solid #eee; border-radius:12px; padding:12px; margin:10px 0}
+  .blk .h{font-weight:900}
+  .blk .t{margin-top:6px; color:#222; font-size:13px}
+  .blk .s{margin-top:6px; color:#555; font-size:12px}
+  .btn{display:inline-block; padding:10px 12px; border-radius:10px; border:1px solid #ddd; background:#fafafa; cursor:pointer}
+  ul{margin:6px 0 0 18px}
+</style>
+</head>
+<body>
+  <div class="noPrint" style="margin-bottom:12px">
+    <button class="btn" onclick="window.print()">Imprimer / Enregistrer en PDF</button>
+  </div>
+
+  <h1>Rapport d’audit — backup-audit</h1>
+  <p class="meta">
+    Généré : ${escapeHtml(data.generated_at)} · Couverture : ${covPct}% · Score : ${data.score_total}/100 · Niveau : ${escapeHtml(data.level?.text || "—")}
+  </p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="kpi">
+        <div class="k"><div class="t">Score</div><div class="v">${data.score_total}/100</div></div>
+        <div class="k"><div class="t">Couverture</div><div class="v">${covPct}%</div></div>
+        <div class="k"><div class="t">Incohérences</div><div class="v">${issuesCount}</div></div>
+      </div>
+      <h3 style="margin:14px 0 6px">Scores par axe</h3>
+      <table>
+        <thead><tr><th>Axe</th><th style="text-align:right">%</th><th style="text-align:right">Brut</th></tr></thead>
+        <tbody>${axisTable}</tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 10px">Toile</h3>
+      ${radarImg || "<div style='color:#666;font-size:13px'>Radar indisponible.</div>"}
+      <div style="color:#666;font-size:12px;margin-top:10px">
+        Lecture rapide : les creux = angles morts (axes faibles).
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3 style="margin:0 0 10px">À vérifier (cohérence)</h3>
+    ${issuesHtml}
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3 style="margin:0 0 10px">Détail des réponses</h3>
+    ${answersHtml}
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <h3 style="margin:0 0 10px">Notes</h3>
+    <div style="color:#555;font-size:13px">
+      Ce rapport n’est pas une preuve de sécurité. Il est une base : ce qui compte ensuite, ce sont les preuves (tests, logs, architecture, séparation réelle des accès).
+    </div>
+  </div>
+</body>
+</html>
+    `;
+  }
+
+  function downloadText(filename, content, mime="text/plain"){
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=> URL.revokeObjectURL(url), 1000);
+  }
+
+  function exportJsonTech(){
+    const result = compute();
+    const actQ = activeQuestions();
+
+    const answers = {};
+    for (const q of actQ){
+      const chosen = document.querySelector(`input[name="${q.id}"]:checked`);
+      if (!chosen){ answers[q.id] = null; continue; }
+
+      const optIndex = Number((chosen.id || "").split("_").pop());
+      let score = Number(chosen.dataset.score||0);
       let v321 = null;
       if (q.id === "a4" && score >= 8){
         const v = document.querySelector('input[name="v321"]:checked');
@@ -1238,33 +1737,55 @@
       };
     }
 
-    const axisScores = {};
-    for (const a of AXES){
-      const raw = result.axisRaw[a.key] ?? 0;
-      const mx  = result.axisMax[a.key] ?? 0;
-      axisScores[a.key] = mx ? Math.round((raw/mx)*100) : 0;
-    }
-
     const payload = {
       generated_at: new Date().toISOString(),
+      active_questions_total: actQ.length,
       score_total: result.normalized,
       coverage: result.coverage,
-      radar: axisScores,
+      issues: detectIssues(),
       answers
     };
 
     const text = JSON.stringify(payload, null, 2);
     navigator.clipboard?.writeText(text).then(()=>{
-      showToast(result.normalized, result.coverage, {text:"Compte-rendu copié", badge:"ok"});
+      showToast(result.normalized, result.coverage, {text:"Copié", badge:"ok"});
     }).catch(()=>{
-      window.prompt("Copiez le JSON :", text);
+      downloadText("backup-audit.json", text, "application/json");
     });
   }
 
+  function exportReportHtml(){
+    const data = buildReportData();
+    const html = buildDetailedReportHTML(data);
+    downloadText("backup-audit_rapport.html", html, "text/html;charset=utf-8");
+    showToast(data.score_total, data.coverage, {text:"Rapport HTML exporté", badge:"ok"});
+  }
+
+  function exportReportPdf(){
+    const data = buildReportData();
+    const html = buildDetailedReportHTML(data);
+
+    const w = window.open("", "_blank");
+    if (!w){
+      alert("Popup bloquée. Autorisez l’ouverture d’onglets pour exporter en PDF.");
+      return;
+    }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+
+    // tentative d'ouverture du dialogue d'impression
+    w.onload = () => {
+      try{ w.focus(); w.print(); }catch(e){}
+    };
+  }
+
+  // --- Reset ---
   function resetAll(){
     $$('input[type="radio"]').forEach(i => i.checked = false);
     $$('input[name="v321"]').forEach(i => i.checked = false);
     window.__showAll = false;
+
     $("#score").textContent = "—";
     $("#barFill").style.width = "0%";
     $("#levelText").textContent = "—";
@@ -1273,11 +1794,13 @@
     badge.textContent = "—";
     $("#tags").innerHTML = "";
     $("#priorities").innerHTML = "<li>—</li>";
+    $("#issuesCount").textContent = "0";
+    $("#issues").innerHTML = `<div class="issueRow"><div class="mutedline">Aucune incohérence détectée.</div></div>`;
     drawRadar(null);
     onAnyChange();
   }
 
-  // --- Tooltip logic ---
+  // --- Tooltip ---
   const tip = $("#tip");
   const tipTitle = $("#tipTitle");
   const tipText = $("#tipText");
@@ -1332,8 +1855,7 @@
     document.addEventListener("mouseover", (e) => {
       const t = e.target.closest?.(".info[data-tip]");
       if (!t) return;
-      const id = t.dataset.tip;
-      showTip(id, t.getBoundingClientRect());
+      showTip(t.dataset.tip, t.getBoundingClientRect());
     });
     document.addEventListener("mouseout", (e) => {
       const t = e.target.closest?.(".info[data-tip]");
@@ -1345,11 +1867,7 @@
     document.addEventListener("click", (e) => {
       const info = e.target.closest?.(".info[data-tip]");
       if (info){
-        const id = info.dataset.tip;
-        // toggle if same
-        const isSame = tip.classList.contains("show") && tipTitle.textContent === (GLOSSARY[id]?.title || "");
-        if (isSame) { hideTip(); return; }
-        showTip(id, info.getBoundingClientRect());
+        showTip(info.dataset.tip, info.getBoundingClientRect());
         return;
       }
       if (tip.classList.contains("show") && !tip.contains(e.target)) hideTip();
@@ -1361,19 +1879,30 @@
 
   // --- Buttons ---
   $("#btnScore").addEventListener("click", compute);
-  $("#btnExport").addEventListener("click", exportSummary);
   $("#btnReset").addEventListener("click", resetAll);
-  $("#openAll").addEventListener("click", () => {
-    // open all answered details
-    $$("#completed details").forEach(d => d.open = true);
+
+  // Export dialog
+  const dlg = $("#exportDlg");
+  $("#btnExport").addEventListener("click", () => {
+    if (dlg?.showModal) dlg.showModal();
+    else {
+      const choice = window.prompt("Exporter : 1=HTML, 2=PDF, 3=JSON", "1");
+      if (choice === "2") exportReportPdf();
+      else if (choice === "3") exportJsonTech();
+      else exportReportHtml();
+    }
   });
-  $("#closeAll").addEventListener("click", () => {
-    $$("#completed details").forEach(d => d.open = false);
-  });
+  $("#expCancel").addEventListener("click", ()=> dlg.close());
+  $("#expHtml").addEventListener("click", ()=> { dlg.close(); exportReportHtml(); });
+  $("#expPdf").addEventListener("click", ()=> { dlg.close(); exportReportPdf(); });
+  $("#expJson").addEventListener("click", ()=> { dlg.close(); exportJsonTech(); });
+
+  $("#openAll").addEventListener("click", () => { $$("#completed details").forEach(d => d.open = true); });
+  $("#closeAll").addEventListener("click", () => { $$("#completed details").forEach(d => d.open = false); });
   $("#showAllQs").addEventListener("click", () => {
     window.__showAll = !window.__showAll;
     $("#showAllQs").textContent = window.__showAll ? "Masquer les questions répondues" : "Afficher toutes les questions";
-    applyCollapseAnswered();
+    applyHideAnswered();
   });
 
   // Init
