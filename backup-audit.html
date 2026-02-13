@@ -333,7 +333,7 @@
     <div class="brand">
       <div class="dot" aria-hidden="true"></div>
       <div>
-        <h1>backup-audit — QCM (les questions disparaissent quand vous répondez)</h1>
+        <h1>Backup-audit — QCM</h1>
         <p class="subtitle">
           Objectif : libérer l’écran au fur et à mesure. Une question répondue se replie dans “Réponses déjà données”.
           Si vous doutez : prenez l’option la plus défavorable. Sinon le score ment.
@@ -588,20 +588,17 @@
           opt("Partiel",5,["Sécurité"],"Ajouter immutabilité + séparation des identités + journaux."),
           opt("Non / inconnu",0,["Sécurité"],"Mettre des sauvegardes immuables et isolées : priorité ransomware.")
         ]),
-        // Cassante #1
-        q("a8","Cassant : votre serveur de backup est-il joint au domaine (AD) ?",10,"domain","Sécurité","Audit","Si oui, vous augmentez fortement le risque d’effet domino AD → backup.", [
+        q("a8","Votre serveur de backup est-il joint au domaine (AD) ?",10,"domain","Sécurité","Audit","Si oui, vous augmentez fortement le risque d’effet domino AD → backup.", [
           opt("Non, serveur de backup hors domaine + identités dédiées",10,["Sécurité","Résilience"]),
           opt("Partiel (joint mais durci / comptes séparés)",4,["Sécurité"],"Sortir le serveur de backup du domaine ou isoler fortement (identités, réseau, MFA, bastion)."),
           opt("Oui, joint au domaine (classique)",0,["Sécurité"],"Priorité : casser la chaîne AD→backup (hors domaine / isolation / comptes dédiés).")
         ]),
-        // Cassante #2
-        q("a9","Cassant : le dépôt backup (repo) est-il accessible en écriture avec des identifiants “courants” (admins/domain admin) ?",10,null,"Sécurité","Audit","Si oui : en compromission, le repo est une cible facile.", [
+        q("a9","Le dépôt backup (repo) est-il accessible en écriture avec des identifiants “courants” (admins/domain admin) ?",10,null,"Sécurité","Audit","Si oui : en compromission, le repo est une cible facile.", [
           opt("Non (accès restreint, comptes dédiés, MFA, traces)",10,["Sécurité"]),
           opt("Partiel",4,["Sécurité"],"Réduire le blast radius : comptes dédiés, séparation, verrouillage, journaux hors de portée."),
           opt("Oui / inconnu",0,["Sécurité"],"Retirer l’accès en écriture aux identités courantes : sinon le repo tombe.")
         ]),
-        // Cassante #3 (AV/EDR)
-        q("a10","Cassant : AV/EDR sur le serveur de backup, est-ce maîtrisé (exceptions, surveillance) ?",8,"av","Exploitation","Audit","Le piège : pas d’agent = compromission facile. Agent mal réglé = backups cassés.", [
+        q("a10","AV/EDR sur le serveur de backup, est-ce maîtrisé (exceptions, surveillance) ?",8,"av","Exploitation","Audit","Le piège : pas d’agent = compromission facile. Agent mal réglé = backups cassés.", [
           opt("Oui (EDR/AV + exceptions + supervision) et ça n’impacte pas les jobs",8,["Exploitation","Sécurité"]),
           opt("Partiel (agent présent mais ‘au pif’ / incidents)",4,["Exploitation"],"Configurer whitelists/exclusions, monitorer l’impact, valider avec éditeur backup."),
           opt("Non",0,["Exploitation"],"Mettre un contrôle adapté (au minimum durcissement + monitoring), sinon la compromission est facile.")
