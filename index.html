@@ -19,7 +19,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
     }
     .container {
@@ -37,8 +37,7 @@
     }
     h2 {
       font-size: 28px;
-      margin-bottom: 15px;
-      color: var(--text);
+      margin: 20px 0;
     }
     .description {
       font-size: 18px;
@@ -47,18 +46,7 @@
     }
     .link-buttons {
       display: flex;
-      flex-direction: column;
-      gap: 40px;
-    }
-    .category {
-      margin-bottom: 30px;
-    }
-    .category .category-title {
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-    .category-buttons {
-      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       gap: 20px;
     }
@@ -82,8 +70,8 @@
     .btn-calc {
       background-color: #3b82f6;
     }
-    .btn-other {
-      background-color: #facc15;
+    .btn-backup {
+      background-color: #8b5cf6;
     }
     footer {
       margin-top: 40px;
@@ -102,42 +90,29 @@
 </head>
 <body>
   <div class="container">
-    <h1>Home</h1>
-    <p class="description"> Public IT Tools - Home.</p>
+    <h1>Accueil</h1>
+    <p class="description">Bienvenue sur le portail des outils publics IT de CIDR_Normand.</p>
 
+    <!-- Section Gestion des Réseaux -->
+    <h2>Gestion des Réseaux</h2>
     <div class="link-buttons">
-      <!-- Category: Gestion des Réseaux -->
-      <div class="category">
-        <h2 class="category-title">Gestion des Réseaux</h2>
-        <div class="category-buttons">
-          <a href="cidr-manager.html">
-            <button class="btn-manager">Gestion des Sites et VLAN</button>
-          </a>
-        </div>
-      </div>
-      
-      <!-- Category: Outils de Calcul -->
-      <div class="category">
-        <h2 class="category-title">Outils de Calcul</h2>
-        <div class="category-buttons">
-          <a href="cidr-calc.html">
-            <button class="btn-calc">Calculs CIDR</button>
-          </a>
-        </div>
-      </div>
-      
-      <!-- Category: Autres Outils (Ajout des dernières pages) -->
-      <div class="category">
-        <h2 class="category-title">Autres Outils</h2>
-        <div class="category-buttons">
-          <!-- Ajouter ici d'autres pages HTML -->
-          <!-- Exemple :
-          <a href="autre-outil.html">
-            <button class="btn-other">Autre Outil</button>
-          </a>
-          -->
-        </div>
-      </div>
+      <a href="cidr-manager.html">
+        <button class="btn-manager">Gestion des Sites et VLAN</button>
+      </a>
+      <a href="cidr-calc.html">
+        <button class="btn-calc">Calculs CIDR</button>
+      </a>
+    </div>
+
+    <!-- Section Sauvegarde -->
+    <h2>Outils de Sauvegarde</h2>
+    <div class="link-buttons">
+      <a href="backup.html">
+        <button class="btn-backup">Stratégie de Sauvegarde</button>
+      </a>
+      <a href="backup-audit.html">
+        <button class="btn-backup">Audit de Sauvegarde</button>
+      </a>
     </div>
 
     <footer>
